@@ -1,0 +1,3976 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17164f">
+<title>El autocuidado no tiene género — Presentación interactiva</title>
+
+<style>
+:root{
+  --navy:#17164f;
+  --navy2:#28256d;
+  --purple:#8268da;
+  --lav:#eee9ff;
+  --mint:#def7ef;
+  --teal:#087d74;
+  --pink:#ffdeea;
+  --rose:#da4779;
+  --yellow:#fff2bf;
+  --blue:#dff3ff;
+  --cream:#fffdfa;
+  --ink:#29263d;
+  --muted:#716e83;
+  --line:rgba(23,22,79,.12);
+  --shadow:0 18px 50px rgba(23,22,79,.14);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#f7f6ff;
+  color:var(--ink);
+  overscroll-behavior:none;
+}
+
+body{
+  touch-action:pan-y;
+  user-select:none;
+}
+
+.app{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(190,177,255,.34),transparent 26%),
+    radial-gradient(circle at 90% 14%,rgba(166,241,223,.30),transparent 28%),
+    radial-gradient(circle at 86% 88%,rgba(255,191,215,.27),transparent 28%),
+    linear-gradient(160deg,#fffdfb,#f7f4ff 52%,#f4fffb);
+}
+
+.progress-track{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+  z-index:50;
+  background:rgba(23,22,79,.08);
+}
+.progress-bar{
+  height:100%;
+  width:10%;
+  background:linear-gradient(90deg,var(--purple),var(--teal));
+  transition:width .35s ease;
+}
+
+.deck{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+
+.slide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:
+    calc(env(safe-area-inset-top) + 24px)
+    18px
+    calc(env(safe-area-inset-bottom) + 88px);
+  opacity:0;
+  visibility:hidden;
+  transform:translateX(14%) scale(.985);
+  transition:
+    opacity .4s ease,
+    transform .5s cubic-bezier(.2,.8,.2,1),
+    visibility .5s;
+  overflow:hidden;
+}
+
+.slide.active{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(0) scale(1);
+  z-index:2;
+}
+
+.slide.before{
+  transform:translateX(-14%) scale(.985);
+}
+
+.slide.active .reveal{
+  animation:rise .55s cubic-bezier(.2,.8,.2,1) both;
+}
+.slide.active .d1{animation-delay:.06s}
+.slide.active .d2{animation-delay:.12s}
+.slide.active .d3{animation-delay:.18s}
+.slide.active .d4{animation-delay:.24s}
+
+@keyframes rise{
+  from{opacity:0;transform:translateY(20px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes floaty{
+  0%,100%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-12px) rotate(4deg)}
+}
+@keyframes breathe{
+  0%,100%{transform:scale(.72)}
+  50%{transform:scale(1.12)}
+}
+@keyframes shimmer{
+  to{background-position:200% center}
+}
+@keyframes tapPop{
+  0%{transform:scale(1)}
+  45%{transform:scale(.95)}
+  100%{transform:scale(1)}
+}
+@keyframes modalIn{
+  from{opacity:0;transform:translateY(26px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes backdropIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes iconBounce{
+  0%{transform:scale(.7) rotate(-8deg)}
+  65%{transform:scale(1.08) rotate(4deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+@keyframes shine{
+  0%{left:-120%}
+  100%{left:140%}
+}
+
+.blob{
+  position:absolute;
+  width:190px;
+  height:190px;
+  border-radius:44% 56% 60% 40%;
+  opacity:.5;
+  z-index:-1;
+  animation:floaty 8s ease-in-out infinite;
+}
+.b1{left:-80px;top:5%;background:#cfc2ff}
+.b2{right:-80px;top:12%;background:#c7f1e6;animation-delay:-2s}
+.b3{right:-90px;bottom:6%;background:#ffd5e4;animation-delay:-4s}
+.b4{left:-85px;bottom:3%;background:#d2ecff;animation-delay:-6s}
+
+.card{
+  width:100%;
+  max-width:520px;
+  margin:0 auto;
+  padding:24px 20px;
+  border-radius:28px;
+  background:rgba(255,255,255,.90);
+  border:1px solid rgba(255,255,255,.95);
+  outline:1px solid var(--line);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(12px);
+}
+
+.hero{
+  text-align:center;
+  padding:30px 20px;
+}
+.intro-action{max-width:310px;margin:20px auto 0}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 14px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#eee9ff,#e5fbf4);
+  color:var(--purple);
+  font-size:13px;
+  font-weight:900;
+}
+
+h1{
+  margin:18px 0 0;
+  color:var(--navy);
+  font-size:clamp(42px,12vw,64px);
+  line-height:.92;
+  letter-spacing:-.045em;
+  font-weight:950;
+  text-transform:uppercase;
+}
+h1 span{
+  background:linear-gradient(90deg,var(--navy),var(--purple),var(--teal),var(--navy));
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:shimmer 7s linear infinite;
+}
+
+h2{
+  margin:0 0 14px;
+  color:var(--navy);
+  font-size:clamp(33px,9vw,48px);
+  line-height:.98;
+  letter-spacing:-.03em;
+}
+
+h3{
+  margin:0 0 8px;
+  color:var(--teal);
+  font-size:22px;
+}
+
+p{
+  margin:12px 0;
+  font-size:18px;
+  line-height:1.48;
+}
+
+.small{font-size:15px;color:var(--muted)}
+.kicker{
+  color:var(--purple);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:12px;
+  font-weight:950;
+  margin-bottom:10px;
+}
+
+.slogan{
+  margin-top:22px;
+  padding:14px 16px;
+  border-radius:20px;
+  background:linear-gradient(90deg,var(--pink),var(--lav));
+  color:var(--navy);
+  font-weight:950;
+  font-size:23px;
+  line-height:1.15;
+}
+
+.interactive-hint{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin:8px 0 14px;
+  padding:8px 11px;
+  border-radius:999px;
+  background:rgba(130,104,218,.10);
+  color:var(--purple);
+  font-size:12px;
+  font-weight:850;
+}
+
+.stack{
+  display:grid;
+  gap:12px;
+}
+
+/* INTERACTIVE CARDS */
+.interactive{
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.interactive::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  left:-120%;
+  width:65%;
+  height:140%;
+  transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.62),transparent);
+  pointer-events:none;
+}
+
+.interactive:active{
+  animation:tapPop .24s ease;
+  box-shadow:0 5px 14px rgba(23,22,79,.10);
+}
+
+.interactive:active::after{
+  animation:shine .45s ease;
+}
+
+.interactive .tap-icon{
+  position:absolute;
+  right:9px;
+  top:9px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(130,104,218,.10);
+  color:var(--purple);
+  font-size:12px;
+  font-weight:950;
+}
+
+.mini{
+  display:flex;
+  gap:13px;
+  align-items:flex-start;
+  padding:15px;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(23,22,79,.06);
+}
+.mini .icon{
+  width:50px;
+  height:50px;
+  flex:0 0 50px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  background:linear-gradient(145deg,var(--lav),var(--mint));
+  font-size:27px;
+}
+.mini b{
+  display:block;
+  color:var(--navy);
+  margin-bottom:2px;
+  font-size:17px;
+  padding-right:22px;
+}
+.mini span{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.35;
+}
+
+.callout{
+  text-align:center;
+  background:linear-gradient(145deg,#fff8d8,#fff0f6);
+  border:2px dashed #e6b34c;
+}
+.callout .big{
+  font-size:31px;
+  line-height:1.08;
+  font-weight:950;
+  color:var(--navy);
+  margin:4px 0 12px;
+}
+
+.myth{
+  padding:15px;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+}
+.myth + .myth{margin-top:10px}
+.myth-head{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-weight:950;
+  color:var(--navy);
+  padding-right:24px;
+}
+.bad,.good{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  font-weight:950;
+}
+.bad{background:#ffe3eb;color:#b93663}
+.good{background:#def7ef;color:#087d74}
+
+.tip-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+.tip{
+  min-height:132px;
+  padding:14px 10px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(23,22,79,.06);
+}
+.tip.wide{grid-column:1/-1;min-height:112px}
+.tip .emoji{font-size:34px;margin-bottom:8px}
+.tip b{font-size:15px;line-height:1.18;color:var(--navy);padding:0 12px}
+
+.breathe-card{
+  text-align:center;
+}
+.breathe-area{
+  position:relative;
+  height:285px;
+  display:grid;
+  place-items:center;
+}
+.breathe-circle{
+  width:155px;
+  height:155px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,#d8cdff 55%,#9578e3);
+  box-shadow:0 20px 55px rgba(124,98,211,.28);
+}
+.breathe-circle.run{animation:breathe 8s ease-in-out infinite}
+.breathe-label{
+  position:absolute;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  padding:9px 14px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  color:var(--navy);
+  font-size:14px;
+  font-weight:900;
+}
+.action{
+  width:100%;
+  border:0;
+  border-radius:18px;
+  padding:14px 16px;
+  background:linear-gradient(90deg,var(--navy),var(--purple));
+  color:white;
+  font-size:16px;
+  font-weight:950;
+  box-shadow:0 12px 28px rgba(23,22,79,.20);
+  cursor:pointer;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+.action:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 16px 32px rgba(23,22,79,.24)}
+.action:active{transform:translateY(0) scale(.985)}
+
+.report{
+  display:grid;
+  gap:8px;
+}
+.report-line{
+  padding:11px 12px;
+  border-radius:14px;
+  background:#fff;
+  border-left:5px solid var(--purple);
+  font-size:14px;
+  line-height:1.32;
+  box-shadow:0 5px 14px rgba(23,22,79,.05);
+}
+
+.myth-grid{
+  display:grid;
+  gap:10px;
+}
+.myth-grid .myth + .myth{margin-top:0}
+
+.nav{
+  position:fixed;
+  z-index:60;
+  left:12px;
+  right:12px;
+  bottom:calc(env(safe-area-inset-bottom) + 10px);
+  height:62px;
+  display:grid;
+  grid-template-columns:60px 1fr 60px;
+  gap:10px;
+  align-items:center;
+  padding:8px;
+  border-radius:24px;
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.95);
+  outline:1px solid var(--line);
+  box-shadow:0 16px 45px rgba(23,22,79,.18);
+  backdrop-filter:blur(15px);
+}
+
+.nav button{
+  height:46px;
+  border:0;
+  border-radius:16px;
+  color:white;
+  background:var(--navy);
+  font-size:22px;
+  font-weight:950;
+  cursor:pointer;
+  transition:transform .2s ease,opacity .2s ease,background .2s ease;
+}
+.nav button:hover:not(:disabled){transform:translateY(-2px);background:var(--navy2)}
+.nav button:active:not(:disabled){transform:scale(.96)}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav-center{
+  text-align:center;
+  color:var(--navy);
+}
+.nav-center b{
+  display:block;
+  font-size:13px;
+}
+.nav-center span{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.tap-zone{
+  position:fixed;
+  top:0;
+  bottom:84px;
+  width:9%;
+  z-index:20;
+}
+.tap-zone.left{left:0}
+.tap-zone.right{right:0}
+
+.swipe-note{
+  position:absolute;
+  bottom:98px;
+  left:0;
+  right:0;
+  text-align:center;
+  color:rgba(23,22,79,.45);
+  font-size:11px;
+  pointer-events:none;
+}
+.desktop-hint{display:none}
+
+button:focus-visible,
+.interactive:focus-visible{
+  outline:3px solid rgba(8,125,116,.55);
+  outline-offset:3px;
+}
+
+/* MODAL / BOTTOM SHEET */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:150;
+  background:rgba(14,13,45,.42);
+  backdrop-filter:blur(8px);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s ease, visibility .25s ease;
+}
+
+.modal-backdrop.open{
+  opacity:1;
+  visibility:visible;
+  animation:backdropIn .25s ease both;
+}
+
+.modal-sheet{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:calc(env(safe-area-inset-bottom) + 10px);
+  max-height:min(78vh,650px);
+  overflow:auto;
+  background:rgba(255,255,255,.98);
+  border-radius:30px;
+  padding:12px 18px 20px;
+  box-shadow:0 28px 90px rgba(13,12,45,.35);
+  border:1px solid rgba(255,255,255,.95);
+  transform:translateY(35px) scale(.97);
+}
+
+.modal-backdrop.open .modal-sheet{
+  animation:modalIn .38s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.modal-sheet.dragging{
+  animation:none !important;
+  transition:none !important;
+  will-change:transform;
+}
+.modal-backdrop.dragging{
+  transition:none !important;
+}
+
+
+.modal-handle{
+  width:100%;
+  height:34px;
+  margin:-4px 0 3px;
+  position:relative;
+  background:transparent;
+  touch-action:none;
+  cursor:grab;
+}
+.modal-handle::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:10px;
+  width:52px;
+  height:6px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:rgba(23,22,79,.16);
+  transition:width .15s ease, background .15s ease;
+}
+.modal-sheet.dragging .modal-handle::after{
+  width:66px;
+  background:rgba(130,104,218,.38);
+}
+.modal-sheet.dragging .modal-handle{
+  cursor:grabbing;
+}
+
+.modal-top{
+  display:grid;
+  grid-template-columns:62px 1fr 38px;
+  gap:12px;
+  align-items:center;
+}
+
+.modal-icon{
+  width:62px;
+  height:62px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  background:linear-gradient(145deg,var(--lav),var(--mint));
+  animation:iconBounce .45s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.modal-title{
+  margin:0;
+  font-size:24px;
+  line-height:1.05;
+  color:var(--navy);
+  font-weight:950;
+}
+
+.modal-close{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:14px;
+  background:#f1eff8;
+  color:var(--navy);
+  font-size:19px;
+  font-weight:900;
+}
+
+.modal-body{
+  margin-top:16px;
+}
+
+.modal-body p{
+  font-size:16px;
+  line-height:1.5;
+  margin:10px 0;
+}
+
+.modal-info{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#f6f2ff,#effcf7);
+  border:1px solid var(--line);
+}
+
+.modal-info strong{
+  display:block;
+  color:var(--teal);
+  margin-bottom:5px;
+}
+
+.modal-example{
+  margin-top:12px;
+  padding:13px 14px;
+  border-radius:18px;
+  background:#fff8d9;
+  border:1px solid rgba(230,179,76,.35);
+}
+
+.modal-example strong{
+  color:#986d14;
+}
+
+.modal-action{
+  margin-top:16px;
+  width:100%;
+  border:0;
+  border-radius:17px;
+  padding:13px 15px;
+  background:linear-gradient(90deg,var(--navy),var(--purple));
+  color:#fff;
+  font-size:15px;
+  font-weight:950;
+}
+
+.dots{
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  margin-top:14px;
+}
+.dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:rgba(23,22,79,.16);
+}
+.dot.on{background:var(--purple);transform:scale(1.35)}
+
+/* =========================================================
+   ESCRITORIO / TABLET
+   La presentación mantiene el formato por diapositivas, pero
+   aprovecha el espacio horizontal cuando hay más pantalla.
+   ========================================================= */
+@media(min-width:700px){
+  html,body{overflow:hidden}
+
+  .app{
+    padding:0 clamp(18px,3vw,54px);
+  }
+
+  .deck{
+    max-width:1280px;
+    margin:0 auto;
+  }
+
+  .slide{
+    justify-content:center;
+    padding:
+      clamp(48px,8vh,94px)
+      clamp(12px,2vw,34px)
+      calc(env(safe-area-inset-bottom) + 104px);
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .slide::-webkit-scrollbar{display:none}
+
+  .card{
+    width:100%;
+    max-width:980px;
+    padding:clamp(28px,3.3vw,48px);
+    border-radius:36px;
+  }
+
+  .hero{padding:clamp(38px,5vw,70px)}
+  h1{font-size:clamp(58px,7.4vw,106px)}
+  h2{font-size:clamp(40px,4.8vw,68px)}
+  p{font-size:19px}
+  .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+
+  .nav{
+    left:50%;
+    right:auto;
+    width:min(720px,calc(100% - 48px));
+    transform:translateX(-50%);
+  }
+
+  .tap-zone{width:48px}
+  .swipe-note{font-size:12px}
+  .mobile-hint{display:none}
+  .desktop-hint{display:inline}
+
+  .modal-sheet{
+    max-width:680px;
+    left:50%;
+    right:auto;
+    width:calc(100% - 48px);
+    transform:translateX(-50%) translateY(35px) scale(.97);
+  }
+  .modal-backdrop.open .modal-sheet{
+    animation:none;
+    transform:translateX(-50%) translateY(0) scale(1);
+    transition:.35s ease;
+  }
+
+  .tip-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .tip.wide{grid-column:2;min-height:132px}
+
+  .myth-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .myth-grid .myth{min-height:184px}
+  .wide-card{max-width:1120px}
+  .wide-card .report{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .wide-card .report-line{min-height:92px;display:flex;align-items:center}
+}
+
+@media(min-width:980px){
+  .card{max-width:1120px}
+  .stack{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .mini{min-height:190px;padding:20px;flex-direction:column}
+  .mini .icon{width:58px;height:58px;flex-basis:58px;margin-bottom:4px}
+  .mini b{font-size:18px}
+  .mini span{font-size:15px}
+
+  .breathe-card{
+    max-width:980px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(300px,.82fr);
+    grid-template-areas:
+      "kicker visual"
+      "title visual"
+      "copy visual"
+      "action visual";
+    column-gap:clamp(28px,5vw,76px);
+    align-items:center;
+    text-align:left;
+  }
+  .breathe-card .kicker{grid-area:kicker}
+  .breathe-card h2{grid-area:title}
+  .breathe-card > p{grid-area:copy}
+  .breathe-card .action{grid-area:action}
+  .breathe-card .breathe-area{grid-area:visual;height:330px}
+}
+
+@media(max-width:699px) and (max-height:720px){
+  .slide{
+    justify-content:flex-start;
+    padding-top:calc(env(safe-area-inset-top) + 20px);
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .slide::-webkit-scrollbar{display:none}
+  .card{padding:22px 18px}
+  .hero{padding:26px 18px}
+  h1{font-size:clamp(38px,11vw,54px)}
+  h2{font-size:clamp(30px,8.8vw,42px)}
+  .slogan{font-size:20px}
+  .breathe-area{height:220px}
+}
+
+@media(hover:hover){
+  .interactive:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 30px rgba(23,22,79,.12);
+  }
+  .interactive:hover::after{animation:shine .65s ease}
+}
+
+@media(min-width:700px) and (max-height:760px){
+  .slide{
+    justify-content:flex-start;
+    padding-top:30px;
+  }
+  .card{padding:28px}
+  .hero{padding:34px}
+  .breathe-area{height:230px}
+}
+
+@media(max-width:699px) and (orientation:landscape) and (max-height:600px){
+  .rotate-message{display:flex!important}
+}
+.rotate-message{
+  display:none;
+  position:fixed;
+  z-index:200;
+  inset:0;
+  background:var(--navy);
+  color:white;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+}
+.rotate-message div{max-width:320px}
+.rotate-message .phone{font-size:60px;display:block;margin-bottom:14px}
+.rotate-title{margin:0 0 8px;color:white;font-size:34px}
+
+/* =========================================================
+   EXPERIENCIA WEB
+   Las pantallas se convierten en secciones desplazables:
+   el contenido respira, se descubre al hacer scroll y la
+   navegación funciona como apoyo, no como una diapositiva.
+   ========================================================= */
+html,
+body{
+  height:auto;
+  min-height:100%;
+  overflow-x:hidden;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+}
+
+body.web-experience{
+  touch-action:pan-y;
+  user-select:auto;
+}
+
+body.web-experience .app{
+  position:relative;
+  inset:auto;
+  min-height:100svh;
+  overflow:visible;
+}
+
+body.web-experience .deck{
+  height:auto;
+  max-width:none;
+}
+
+body.web-experience .progress-track{
+  height:3px;
+  background:rgba(23,22,79,.10);
+}
+
+.site-header{
+  position:fixed;
+  z-index:75;
+  top:17px;
+  left:24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  pointer-events:none;
+}
+.site-brand{
+  pointer-events:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 13px 8px 8px;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:18px;
+  background:rgba(255,255,255,.76);
+  color:var(--navy);
+  box-shadow:0 10px 28px rgba(23,22,79,.10);
+  backdrop-filter:blur(16px);
+  cursor:pointer;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.site-brand:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(23,22,79,.14)}
+.brand-mark{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:linear-gradient(145deg,var(--lav),var(--mint));
+  font-size:17px;
+}
+.brand-copy{display:grid;text-align:left;line-height:1.05}
+.brand-copy b{font-size:12px;letter-spacing:.02em}
+.brand-copy small{margin-top:3px;color:var(--muted);font-size:10px}
+.site-tag{
+  color:rgba(23,22,79,.56);
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.04em;
+}
+
+body.web-experience .slide{
+  position:relative;
+  inset:auto;
+  min-height:100svh;
+  height:auto;
+  justify-content:center;
+  padding:
+    clamp(116px,15vh,164px)
+    clamp(18px,7vw,112px)
+    clamp(118px,14vh,150px);
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  transition:none;
+  overflow:visible;
+  scroll-margin-top:92px;
+}
+
+body.web-experience .slide.active,
+body.web-experience .slide.before{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  z-index:auto;
+}
+
+body.web-experience .slide:nth-child(2n){
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(238,233,255,.17));
+}
+body.web-experience .slide:nth-child(3n){
+  background:linear-gradient(180deg,rgba(222,247,239,.20),rgba(255,255,255,.06));
+}
+body.web-experience .slide > .blob{opacity:.34}
+body.web-experience .tap-zone{display:none}
+
+body.web-experience .swipe-note{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  bottom:34px;
+  color:rgba(23,22,79,.52);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.scroll-arrow{
+  display:inline-grid;
+  place-items:center;
+  width:24px;
+  height:24px;
+  border:1px solid rgba(130,104,218,.28);
+  border-radius:50%;
+  animation:scrollCue 1.8s ease-in-out infinite;
+}
+@keyframes scrollCue{
+  0%,100%{transform:translateY(0);opacity:.55}
+  50%{transform:translateY(5px);opacity:1}
+}
+
+body.web-experience .slide:first-child .hero{
+  position:relative;
+  max-width:1120px;
+  padding:clamp(30px,5vw,78px) 0;
+  background:transparent;
+  border:0;
+  outline:0;
+  box-shadow:none;
+  backdrop-filter:none;
+}
+body.web-experience .slide:first-child .hero::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  right:-3%;
+  top:7%;
+  width:clamp(230px,30vw,420px);
+  aspect-ratio:1;
+  border-radius:42% 58% 63% 37%;
+  background:linear-gradient(145deg,rgba(238,233,255,.88),rgba(222,247,239,.64) 54%,rgba(255,222,234,.72));
+  filter:blur(.2px);
+  transform:rotate(8deg);
+  opacity:.78;
+}
+body.web-experience .slide:first-child .hero::after{
+  content:"✦";
+  position:absolute;
+  z-index:0;
+  right:13%;
+  top:22%;
+  width:clamp(120px,15vw,210px);
+  aspect-ratio:1;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(130,104,218,.24);
+  border-radius:50%;
+  color:rgba(130,104,218,.64);
+  font-size:clamp(30px,4vw,58px);
+  animation:floaty 7s ease-in-out infinite;
+}
+body.web-experience .slide:first-child .hero > *{position:relative;z-index:1}
+body.web-experience .slide:first-child .hero .slogan{max-width:620px}
+body.web-experience .slide:first-child .hero .small{max-width:520px}
+
+body.web-experience.js-enabled .reveal{
+  opacity:0;
+  transform:translateY(18px);
+}
+body.web-experience.js-enabled .slide.active .reveal{animation:none}
+body.web-experience.js-enabled .slide.in-view .reveal{
+  animation:rise .68s cubic-bezier(.2,.8,.2,1) both;
+}
+body.web-experience.js-enabled .slide.in-view .d1{animation-delay:.08s}
+body.web-experience.js-enabled .slide.in-view .d2{animation-delay:.16s}
+body.web-experience.js-enabled .slide.in-view .d3{animation-delay:.24s}
+body.web-experience.js-enabled .slide.in-view .d4{animation-delay:.32s}
+
+body.web-experience .nav{
+  top:16px;
+  bottom:auto;
+  left:50%;
+  right:auto;
+  width:min(570px,calc(100% - 420px));
+  min-width:360px;
+  height:54px;
+  padding:6px;
+  border-radius:20px;
+  transform:translateX(-50%);
+  box-shadow:0 12px 34px rgba(23,22,79,.14);
+}
+body.web-experience .nav button{height:40px;border-radius:13px;font-size:19px}
+body.web-experience .nav-center b{font-size:12px}
+body.web-experience .nav-center span{font-size:10px}
+
+@media(min-width:700px){
+  body.web-experience .slide:nth-child(2n) .card:not(.hero){
+    margin-left:auto;
+    margin-right:clamp(0px,4vw,72px);
+  }
+  body.web-experience .slide:nth-child(2n+1) .card:not(.hero){
+    margin-left:clamp(0px,4vw,72px);
+    margin-right:auto;
+  }
+  body.web-experience .modal-sheet{
+    top:50%;
+    bottom:auto;
+    left:50%;
+    right:auto;
+    max-height:min(78vh,650px);
+    transform:translate(-50%,-46%) scale(.96);
+  }
+  body.web-experience .modal-handle{display:none}
+  body.web-experience .modal-backdrop.open .modal-sheet{
+    animation:modalInWeb .34s cubic-bezier(.2,.8,.2,1) both;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  @keyframes modalInWeb{
+    from{opacity:0;transform:translate(-50%,-46%) scale(.94)}
+    to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  }
+}
+
+@media(max-width:699px){
+  .site-header{top:11px;left:14px}
+  .site-tag{display:none}
+  .brand-copy small{display:none}
+  body.web-experience .slide{
+    min-height:100svh;
+    padding-top:96px;
+    padding-bottom:122px;
+  }
+  body.web-experience .slide:first-child .hero{text-align:center}
+  body.web-experience .slide:first-child .hero::before{
+    right:-18%;
+    top:20%;
+    width:70vw;
+    opacity:.55;
+  }
+  body.web-experience .slide:first-child .hero::after{right:10%;top:28%;opacity:.65}
+  body.web-experience .nav{
+    top:auto;
+    bottom:12px;
+    left:12px;
+    right:12px;
+    width:auto;
+    min-width:0;
+    transform:none;
+  }
+  body.web-experience .swipe-note{bottom:82px}
+}
+
+@media(max-width:699px) and (max-height:720px){
+  body.web-experience .slide{padding-top:82px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html,body{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+
+.rotate-message{display:none!important}
+
+/* =========================================================
+   RESTAURAR MODO PRESENTACIÓN
+   Conserva la versión anterior: una pantalla a la vez,
+   transiciones laterales, swipe, modal y navegación flotante.
+   ========================================================= */
+html,body{
+  height:100%;
+  overflow:hidden;
+  scroll-behavior:auto;
+}
+body{
+  touch-action:pan-y;
+  user-select:none;
+}
+.app{
+  position:fixed;
+  inset:0;
+  min-height:0;
+  overflow:hidden;
+}
+.deck{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  min-height:0;
+  height:auto;
+  justify-content:center;
+  padding:
+    calc(env(safe-area-inset-top) + 24px)
+    18px
+    calc(env(safe-area-inset-bottom) + 88px);
+  opacity:0;
+  visibility:hidden;
+  transform:translateX(14%) scale(.985);
+  transition:
+    opacity .4s ease,
+    transform .5s cubic-bezier(.2,.8,.2,1),
+    visibility .5s;
+  overflow:hidden;
+  scroll-margin-top:0;
+}
+.slide.active{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(0) scale(1);
+  z-index:2;
+}
+.slide.before{transform:translateX(-14%) scale(.985)}
+.tap-zone{display:block}
+.swipe-note{
+  display:block;
+  bottom:98px;
+  font-size:11px;
+}
+
+@media(min-width:700px){
+  .slide{
+    padding:
+      clamp(48px,8vh,94px)
+      clamp(12px,2vw,34px)
+      calc(env(safe-area-inset-bottom) + 104px);
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .slide::-webkit-scrollbar{display:none}
+}
+
+@media(max-width:699px) and (max-height:720px){
+  .slide{
+    justify-content:flex-start;
+    padding-top:calc(env(safe-area-inset-top) + 20px);
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .slide::-webkit-scrollbar{display:none}
+}
+
+@media(max-width:699px) and (orientation:landscape) and (max-height:600px){
+  .rotate-message{display:flex!important}
+}
+
+/* =========================================================
+   AJUSTE RESPONSIVE FINAL
+   Una sola base fluida para teléfonos, tablets, laptops,
+   monitores grandes y pantallas en horizontal.
+   ========================================================= */
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+.app{
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:0;
+}
+.deck{
+  width:min(100%,1440px);
+  height:100dvh;
+  margin:0 auto;
+}
+.slide{
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:
+    max(18px,calc(env(safe-area-inset-top) + clamp(22px,6vh,70px)))
+    clamp(12px,4vw,64px)
+    calc(env(safe-area-inset-bottom) + clamp(78px,10vh,112px));
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:none;
+}
+.slide::-webkit-scrollbar{display:none}
+.card{
+  width:100%;
+  max-width:min(1120px,100%);
+  padding:clamp(20px,3vw,48px);
+  border-radius:clamp(22px,3vw,36px);
+}
+.hero{padding:clamp(26px,4vw,70px) clamp(18px,3vw,48px)}
+h1{font-size:clamp(38px,7vw,106px)}
+h2{font-size:clamp(30px,5vw,68px)}
+p{font-size:clamp(16px,1.35vw,19px)}
+.slogan{font-size:clamp(18px,2.2vw,26px)}
+.callout .big{font-size:clamp(25px,3.2vw,38px)}
+.nav{
+  left:50%;
+  right:auto;
+  width:min(720px,calc(100% - 24px));
+  transform:translateX(-50%);
+}
+.tap-zone{width:clamp(30px,5vw,64px)}
+.modal-sheet{
+  width:min(680px,calc(100% - 24px));
+  max-height:min(78dvh,650px);
+}
+.stack{grid-template-columns:1fr;gap:12px}
+.tip-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tip.wide{grid-column:1/-1}
+.myth-grid{grid-template-columns:1fr;gap:10px}
+.report{grid-template-columns:1fr;gap:8px}
+.mini{min-width:0;min-height:0}
+.mini span{overflow-wrap:anywhere}
+.mini b,.tip b,.myth-head{overflow-wrap:anywhere}
+.breathe-area{height:clamp(210px,32vh,285px)}
+.breathe-circle{width:clamp(120px,22vw,155px);height:clamp(120px,22vw,155px)}
+.rotate-message{display:none!important}
+
+@media(min-width:700px){
+  .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .myth-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .report{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tip-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .tip.wide{grid-column:1/-1}
+  .mini{min-height:150px}
+  .mini .icon{flex:0 0 54px}
+  .slide{justify-content:center}
+}
+
+@media(min-width:1100px){
+  .stack{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .myth-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .report{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tip.wide{grid-column:2}
+  .mini{min-height:190px;flex-direction:column}
+  .mini .icon{width:58px;height:58px;flex-basis:58px;margin-bottom:4px}
+}
+
+@media(max-width:699px){
+  .nav{
+    left:12px;
+    right:12px;
+    width:auto;
+    transform:none;
+  }
+  .slide{justify-content:center}
+  .hero{text-align:center}
+  .breathe-area{height:230px}
+}
+
+@media(max-height:640px){
+  .slide{justify-content:flex-start;padding-top:max(14px,env(safe-area-inset-top))}
+  .card{padding:20px 22px}
+  .hero{padding:22px 18px}
+  .breathe-area{height:205px}
+  .nav{height:56px}
+  .nav button{height:40px}
+}
+
+@media(max-width:380px){
+  .slide{padding-left:10px;padding-right:10px}
+  .card{padding:18px 14px}
+  .hero{padding:20px 10px}
+  .nav{left:8px;right:8px}
+  .mini{gap:10px;padding:13px}
+  .mini .icon{width:44px;height:44px;flex-basis:44px;font-size:24px}
+  .tip{padding:12px 7px}
+  .tip b{padding:0 5px;font-size:14px}
+}
+
+/* Teléfonos compactos: todo el contenido queda visible sin que
+   la navegación tape las tarjetas. */
+@media(max-width:420px) and (min-height:600px){
+  .slide{
+    padding-top:14px;
+    padding-bottom:84px;
+  }
+  .card{padding:16px 12px}
+  h2{
+    margin-bottom:9px;
+    font-size:clamp(31px,8.5vw,37px);
+  }
+  p{
+    margin:8px 0;
+    font-size:15px;
+    line-height:1.36;
+  }
+  .interactive-hint{
+    margin:6px 0 10px;
+    padding:7px 10px;
+    font-size:11px;
+  }
+  .stack{gap:9px}
+  .mini{
+    gap:10px;
+    padding:11px 12px;
+  }
+  .mini .icon{
+    width:42px;
+    height:42px;
+    flex-basis:42px;
+    font-size:22px;
+  }
+  .mini b{
+    margin-bottom:1px;
+    font-size:15px;
+    line-height:1.12;
+  }
+  .mini span{
+    font-size:12.5px;
+    line-height:1.28;
+  }
+  .mini .tap-icon{
+    top:7px;
+    right:7px;
+    width:22px;
+    height:22px;
+  }
+  .myth-grid{gap:9px}
+  .myth{padding:12px}
+  .tip{min-height:108px;padding:11px 7px}
+  .tip .emoji{font-size:29px;margin-bottom:5px}
+  .tip b{font-size:13px;line-height:1.15}
+  .report{gap:7px}
+  .report-line{padding:9px 10px;font-size:13px}
+  .breathe-area{height:205px}
+  .nav{
+    bottom:8px;
+    height:54px;
+    grid-template-columns:56px 1fr 56px;
+    border-radius:20px;
+  }
+  .nav button{
+    height:40px;
+    border-radius:13px;
+    font-size:20px;
+  }
+}
+
+@media(max-width:699px) and (max-height:599px){
+  .slide{padding-top:10px;padding-bottom:76px}
+  .card{padding:14px 12px}
+  h2{font-size:30px;margin-bottom:7px}
+  p{font-size:14px;line-height:1.3;margin:6px 0}
+  .interactive-hint{margin:5px 0 8px;padding:6px 9px}
+  .stack{gap:7px}
+  .mini{padding:9px 10px}
+  .mini .icon{width:38px;height:38px;flex-basis:38px;font-size:20px}
+  .mini span{font-size:12px;line-height:1.22}
+  .tip{min-height:92px}
+  .breathe-area{height:170px}
+  .nav{height:50px;bottom:6px}
+  .nav button{height:36px}
+}
+
+.rotate-message{display:none!important}
+
+/* =========================================================
+   SISTEMA DE VIEWPORT SEGURO
+   Esta capa tiene prioridad sobre los ajustes anteriores para
+   mantener proporciones, lectura y zona segura en cualquier
+   combinación de ancho y alto.
+   ========================================================= */
+body.responsive-ui{
+  --nav-safe:90px;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+body.responsive-ui .app{
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  padding:0;
+}
+body.responsive-ui .deck{
+  width:min(100%,1440px);
+  height:100vh;
+  height:100dvh;
+  margin:0 auto;
+}
+body.responsive-ui .slide{
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  padding:
+    max(16px,calc(env(safe-area-inset-top) + clamp(18px,5vh,62px)))
+    clamp(12px,4vw,64px)
+    calc(env(safe-area-inset-bottom) + var(--nav-safe));
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:none;
+  justify-content:center;
+}
+body.responsive-ui .slide::-webkit-scrollbar{display:none}
+body.responsive-ui .slide > .card{
+  width:100%;
+  max-width:min(1120px,100%);
+  max-height:calc(100vh - var(--nav-safe) - 28px);
+  max-height:calc(100dvh - var(--nav-safe) - 28px);
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+body.responsive-ui .slide > .card::-webkit-scrollbar{display:none}
+body.responsive-ui h1{font-size:clamp(38px,7vw,106px)}
+body.responsive-ui h2{font-size:clamp(30px,5vw,68px)}
+body.responsive-ui p{font-size:clamp(16px,1.35vw,19px)}
+body.responsive-ui .nav{
+  z-index:80;
+  left:50%;
+  right:auto;
+  bottom:calc(env(safe-area-inset-bottom) + 8px);
+  width:min(720px,calc(100% - 24px));
+  height:56px;
+  transform:translateX(-50%);
+  grid-template-columns:56px minmax(0,1fr) 56px;
+  border-radius:21px;
+}
+body.responsive-ui .nav button{height:40px;border-radius:13px}
+body.responsive-ui .tap-zone{width:clamp(30px,5vw,64px)}
+body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,650px)}
+
+@media(max-width:699px){
+  body.responsive-ui{--nav-safe:84px}
+  body.responsive-ui .slide{padding-left:12px;padding-right:12px}
+  body.responsive-ui .slide > .card{max-height:calc(100vh - 112px);max-height:calc(100dvh - 112px)}
+  body.responsive-ui .nav{
+    left:8px;
+    right:8px;
+    width:auto;
+    transform:none;
+    grid-template-columns:56px minmax(0,1fr) 56px;
+  }
+  body.responsive-ui .tap-zone{display:block;width:9%}
+  body.responsive-ui .mini{min-width:0}
+  body.responsive-ui .mini b,
+  body.responsive-ui .mini span,
+  body.responsive-ui .tip b,
+  body.responsive-ui .myth-head{overflow-wrap:anywhere}
+}
+
+@media(max-width:420px) and (min-height:600px){
+  body.responsive-ui .slide{
+    padding-top:12px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 82px);
+  }
+  body.responsive-ui .slide > .card{
+    max-height:calc(100vh - 102px);
+    max-height:calc(100dvh - 102px);
+    padding:16px 12px;
+  }
+  body.responsive-ui h2{
+    margin-bottom:9px;
+    font-size:clamp(31px,8.4vw,36px);
+  }
+  body.responsive-ui p{
+    margin:8px 0;
+    font-size:15px;
+    line-height:1.36;
+  }
+  body.responsive-ui .interactive-hint{
+    margin:6px 0 10px;
+    padding:7px 10px;
+    font-size:11px;
+  }
+  body.responsive-ui .stack{grid-template-columns:1fr;gap:9px}
+  body.responsive-ui .mini{gap:10px;padding:11px 12px}
+  body.responsive-ui .mini .icon{
+    width:42px;
+    height:42px;
+    flex-basis:42px;
+    font-size:22px;
+  }
+  body.responsive-ui .mini b{font-size:15px;line-height:1.12}
+  body.responsive-ui .mini span{font-size:12.5px;line-height:1.28}
+  body.responsive-ui .mini .tap-icon{top:7px;right:7px;width:22px;height:22px}
+  body.responsive-ui .myth-grid{grid-template-columns:1fr;gap:9px}
+  body.responsive-ui .myth{padding:12px}
+  body.responsive-ui .tip-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  body.responsive-ui .tip{min-height:108px;padding:11px 7px}
+  body.responsive-ui .tip .emoji{font-size:29px;margin-bottom:5px}
+  body.responsive-ui .tip b{font-size:13px;line-height:1.15}
+  body.responsive-ui .report{grid-template-columns:1fr;gap:7px}
+  body.responsive-ui .report-line{padding:9px 10px;font-size:13px}
+  body.responsive-ui .breathe-area{height:205px}
+  body.responsive-ui .nav{height:54px;bottom:6px;border-radius:20px}
+}
+
+@media(max-width:699px) and (max-height:599px){
+  body.responsive-ui .slide{
+    justify-content:flex-start;
+    padding-top:8px;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 72px);
+  }
+  body.responsive-ui .slide > .card{max-height:calc(100dvh - 84px);padding:14px 12px}
+  body.responsive-ui h2{font-size:30px;margin-bottom:7px}
+  body.responsive-ui p{font-size:14px;line-height:1.3;margin:6px 0}
+  body.responsive-ui .interactive-hint{margin:5px 0 8px;padding:6px 9px}
+  body.responsive-ui .stack{gap:7px}
+  body.responsive-ui .mini{padding:9px 10px}
+  body.responsive-ui .mini .icon{width:38px;height:38px;flex-basis:38px;font-size:20px}
+  body.responsive-ui .mini span{font-size:12px;line-height:1.22}
+  body.responsive-ui .tip{min-height:92px}
+  body.responsive-ui .breathe-area{height:170px}
+  body.responsive-ui .nav{height:50px;bottom:5px}
+  body.responsive-ui .nav button{height:36px}
+}
+
+@media(min-width:700px){
+  body.responsive-ui{--nav-safe:96px}
+  body.responsive-ui .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  body.responsive-ui .myth-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  body.responsive-ui .report{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  body.responsive-ui .tip-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  body.responsive-ui .tip.wide{grid-column:1/-1}
+  body.responsive-ui .help-lab{
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+    grid-template-areas:
+      "kicker kicker"
+      "title title"
+      "intro intro"
+      "options answer"
+      "note note";
+    column-gap:22px;
+    align-items:start;
+  }
+  body.responsive-ui .help-lab > .kicker{grid-area:kicker}
+  body.responsive-ui .help-lab > h2{grid-area:title}
+  body.responsive-ui .help-lab > p.small{grid-area:intro}
+  body.responsive-ui .help-lab > .help-grid{grid-area:options;margin-top:8px}
+  body.responsive-ui .help-lab > .help-answer{grid-area:answer;margin-top:8px}
+  body.responsive-ui .help-lab > .help-note{grid-area:note}
+}
+
+@media(min-width:1100px){
+  body.responsive-ui .stack{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.responsive-ui .myth-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.responsive-ui .report{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.responsive-ui .tip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.responsive-ui .tip.wide{grid-column:2}
+}
+
+@media(max-height:640px) and (min-width:700px){
+  body.responsive-ui .slide{justify-content:flex-start;padding-top:14px}
+  body.responsive-ui .slide > .card{max-height:calc(100dvh - 112px);padding:20px 24px}
+  body.responsive-ui .breathe-area{height:205px}
+}
+
+/* =========================================================
+   LABORATORIOS INTERACTIVOS
+   ========================================================= */
+.lab-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.lab-heading h2{margin-bottom:8px}
+.lab-counter{
+  flex:0 0 auto;
+  padding:8px 11px;
+  border-radius:999px;
+  background:var(--lav);
+  color:var(--purple);
+  font-size:12px;
+  font-weight:950;
+}
+.swipe-stage{
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-height:322px;
+  margin:12px auto 0;
+  perspective:900px;
+}
+.myth-swipe-card{
+  position:relative;
+  width:min(100%,520px);
+  min-height:270px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:34px 30px 26px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.98);
+  border-radius:30px;
+  background:linear-gradient(145deg,#fff,#f7f4ff 58%,#effcf7);
+  box-shadow:0 22px 55px rgba(23,22,79,.18);
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  will-change:transform;
+  transition:transform .34s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease;
+  z-index:2;
+}
+.myth-swipe-card.dragging{
+  cursor:grabbing;
+  transition:none;
+  box-shadow:0 30px 70px rgba(23,22,79,.22);
+}
+.swipe-card-icon{
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  margin-bottom:11px;
+  border-radius:19px;
+  background:linear-gradient(145deg,var(--lav),var(--mint));
+  font-size:30px;
+}
+.swipe-card-label{
+  color:var(--purple);
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  font-size:10px;
+  font-weight:950;
+}
+.myth-swipe-card h3{
+  max-width:430px;
+  margin:10px 0 20px;
+  color:var(--navy);
+  font-size:clamp(23px,3.2vw,34px);
+  line-height:1.05;
+}
+.swipe-direction{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  color:rgba(23,22,79,.43);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.06em;
+}
+.swipe-stamp{
+  position:absolute;
+  top:20px;
+  padding:8px 11px;
+  border:3px solid currentColor;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:1000;
+  opacity:0;
+  transition:opacity .12s ease;
+}
+.stamp-myth{left:20px;color:#c03b68;transform:rotate(-14deg)}
+.stamp-reality{right:20px;color:var(--teal);transform:rotate(14deg)}
+.myth-swipe-card.is-myth .stamp-myth{opacity:1}
+.myth-swipe-card.is-reality .stamp-reality{opacity:1}
+.swipe-feedback{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  width:min(100%,520px);
+  min-height:42px;
+  transform:translateX(-50%) translateY(8px);
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+  line-height:1.35;
+  opacity:0;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.swipe-feedback.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.swipe-feedback strong{color:var(--teal)}
+.swipe-progress{
+  width:min(100%,520px);
+  height:6px;
+  margin:9px auto 0;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(23,22,79,.08);
+}
+.swipe-progress span{
+  display:block;
+  width:10%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--purple),var(--teal));
+  transition:width .35s ease;
+}
+.swipe-score{
+  margin:7px 0 0;
+  color:var(--muted);
+  text-align:center;
+  font-size:12px!important;
+}
+
+.fracture-lab{text-align:center}
+.glass-wrap{
+  position:relative;
+  width:min(100%,560px);
+  height:315px;
+  margin:12px auto 10px;
+  display:grid;
+  place-items:center;
+}
+.glass-message{
+  position:absolute;
+  z-index:1;
+  display:grid;
+  place-items:center;
+  gap:9px;
+  color:var(--navy);
+  text-align:center;
+  font-size:clamp(18px,2.5vw,27px);
+  line-height:1.1;
+  opacity:0;
+  transform:scale(.82) translateY(14px);
+  transition:opacity .4s ease,transform .55s cubic-bezier(.2,.8,.2,1);
+}
+.glass-message-icon{font-size:38px}
+.glass-wrap.broken .glass-message{opacity:1;transform:scale(1) translateY(0)}
+.glass-card{
+  position:relative;
+  z-index:3;
+  width:min(100%,420px);
+  height:250px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:28px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.48),rgba(214,229,255,.22)),
+    repeating-linear-gradient(115deg,rgba(255,255,255,.14) 0 2px,transparent 2px 15px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 24px 50px rgba(23,22,79,.20);
+  color:var(--navy);
+  cursor:crosshair;
+  transition:opacity .35s ease,transform .55s cubic-bezier(.2,.8,.2,1),filter .4s ease;
+}
+.glass-card.broken{opacity:0;transform:scale(1.13) rotate(3deg);filter:blur(2px);pointer-events:none}
+.glass-shine{
+  position:absolute;
+  top:-40%;
+  left:-30%;
+  width:28%;
+  height:180%;
+  transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);
+  animation:glassShine 4.5s ease-in-out infinite;
+}
+@keyframes glassShine{0%,35%{left:-35%}70%,100%{left:120%}}
+.glass-word{position:relative;z-index:1;font-size:clamp(19px,3vw,31px);font-weight:1000;line-height:1.02}
+.glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
+.crack-svg{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
+.crack-svg line{stroke:rgba(38,43,94,.70);stroke-width:.55;stroke-linecap:round;filter:drop-shadow(0 0 1px rgba(255,255,255,.8));animation:crackIn .22s ease both}
+@keyframes crackIn{from{opacity:0;stroke-width:0}to{opacity:1}}
+.glass-shards{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:visible}
+.glass-shard{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(189,214,248,.45));border:1px solid rgba(255,255,255,.9);animation:shardFall var(--duration) cubic-bezier(.2,.8,.2,1) var(--delay) forwards}
+@keyframes shardFall{to{opacity:0;transform:translate3d(var(--tx),var(--ty),0) rotate(var(--rot)) scale(.65)}}
+.stereotype-options{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.stereotype-option{
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:#fff;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+  cursor:pointer;
+  transition:background .2s ease,color .2s ease,transform .2s ease;
+}
+.stereotype-option:hover,.stereotype-option.active{background:var(--navy);color:#fff;transform:translateY(-2px)}
+.fracture-count{margin:9px 0 0!important;color:var(--muted);font-size:12px!important}
+
+.duration-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:20px 0 14px}
+.duration-option{
+  min-height:118px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:5px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+  color:var(--navy);
+  text-align:left;
+  cursor:pointer;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.duration-option span{font-size:25px}
+.duration-option b{font-size:15px}
+.duration-option small{color:var(--muted);font-size:11px}
+.duration-option:hover,.duration-option.selected{transform:translateY(-4px);border-color:rgba(130,104,218,.4);background:linear-gradient(145deg,#fff,#f2efff);box-shadow:0 12px 26px rgba(23,22,79,.10)}
+.pause-plan{
+  display:grid;
+  grid-template-columns:56px minmax(0,1fr);
+  gap:6px 14px;
+  align-items:start;
+  margin-top:14px;
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:linear-gradient(145deg,#f9f7ff,#f0fcf7);
+  animation:rise .45s ease both;
+}
+.pause-plan-icon{width:56px;height:56px;display:grid;place-items:center;border-radius:18px;background:#fff;font-size:28px;box-shadow:0 8px 18px rgba(23,22,79,.08)}
+.pause-plan-copy h3{margin:0;color:var(--navy);font-size:24px}
+.pause-plan-copy p{margin:6px 0 0;font-size:14px}
+.pause-steps{grid-column:1/-1;display:grid;gap:7px;margin-top:7px}
+.pause-step{display:flex;align-items:flex-start;gap:8px;padding:9px 10px;border-radius:13px;background:rgba(255,255,255,.74);color:var(--muted);font-size:13px;line-height:1.35}
+.pause-step::before{content:"✓";color:var(--teal);font-weight:950}
+.pause-breath{grid-column:1/-1}
+.pause-breath .breathe-area{height:190px}
+.pause-actions{grid-column:1/-1;display:flex;gap:9px;align-items:center;margin-top:7px}
+.pause-actions .action{flex:1}
+.quiet-action{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff;color:var(--navy);font-size:14px;font-weight:900;cursor:pointer;transition:transform .2s ease,background .2s ease}
+.quiet-action:hover{transform:translateY(-2px);background:var(--lav)}
+
+.wheel-layout{display:grid;grid-template-columns:1fr;gap:0;align-items:center;justify-content:center;margin:8px auto 2px;max-width:520px}
+.wheel-layout.has-result{gap:22px}
+.wheel-wrap{position:relative;width:min(100%,440px);aspect-ratio:1;margin:0 auto;display:grid;place-items:center}
+.wheel-pointer{position:absolute;z-index:5;top:4px;left:50%;width:0;height:0;transform:translateX(-50%);border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid #ef426f;filter:drop-shadow(0 3px 3px rgba(23,22,79,.22));pointer-events:none}
+.care-wheel{display:block;width:100%;height:100%;overflow:visible;transform-origin:50% 50%;transition:transform 3.8s cubic-bezier(.12,.78,.18,1);will-change:transform;filter:drop-shadow(0 16px 20px rgba(23,22,79,.14))}
+.wheel-sector{stroke:#fff;stroke-width:3;stroke-linejoin:round}
+.wheel-ring{fill:none;stroke:#fff;stroke-width:3}
+.wheel-label{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:21px;font-weight:950;letter-spacing:-.02em;fill:#172b66;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:rgba(255,255,255,.18);stroke-width:1px}
+.wheel-label.long{font-size:17px}
+.wheel-center{position:absolute;z-index:3;left:50%;top:50%;width:74px;height:74px;transform:translate(-50%,-50%);border:5px solid #fff;border-radius:50%;background:#edf6fb;color:var(--navy);font-size:0;box-shadow:0 5px 12px rgba(23,22,79,.16);cursor:pointer}
+.wheel-center::before{content:"▶";font-size:23px;line-height:1;margin-left:3px}
+.wheel-result{padding:22px;border-radius:22px;background:linear-gradient(145deg,#fff8e8,#f5f0ff);border:1px solid rgba(23,22,79,.12);box-shadow:0 12px 28px rgba(23,22,79,.08)}
+.wheel-result.refreshing{animation:resultSwap .5s cubic-bezier(.2,.8,.2,1) both}
+.wheel-result-icon{font-size:38px;margin-bottom:10px}
+.wheel-result h3{margin:0;color:var(--navy);font-size:27px}
+.wheel-result p{margin:8px 0 0;font-size:15px}
+.wheel-wrap.won{animation:wheelCelebrate .7s ease}
+@keyframes wheelCelebrate{0%,100%{transform:scale(1)}45%{transform:scale(1.04) rotate(-1deg)}75%{transform:scale(1.02) rotate(1deg)}}
+@keyframes resultSwap{0%{opacity:.35;transform:translateX(18px) scale(.97)}100%{opacity:1;transform:translateX(0) scale(1)}}
+.wheel-lab > .quiet-action{display:block;margin:6px auto 0;background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 10px 22px rgba(23,22,79,.18)}
+
+@media(min-width:700px){
+  .wheel-layout.has-result{grid-template-columns:minmax(280px,440px) minmax(0,1fr);max-width:820px;gap:28px}
+}
+
+.help-lab{max-width:980px!important}
+.help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 14px}
+.help-option{display:grid;grid-template-columns:42px minmax(0,1fr);grid-template-rows:auto auto;gap:3px 10px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--navy);text-align:left;cursor:pointer;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
+.help-option:hover{transform:translateY(-3px);background:linear-gradient(145deg,#fff,#f3f0ff);box-shadow:0 10px 24px rgba(23,22,79,.10)}
+.help-option span{grid-row:1/-1;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,var(--lav),var(--mint));font-size:22px}
+.help-option b{font-size:14px;line-height:1.15}
+.help-option small{color:var(--muted);font-size:11px}
+.help-option-wide{grid-column:1/-1}
+.help-answer{display:grid;grid-template-columns:58px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:8px 14px;height:260px;min-height:260px;margin-top:12px;padding:18px;border:1px solid rgba(8,125,116,.18);border-radius:22px;background:linear-gradient(145deg,#effcf7,#f7f3ff);overflow:visible;transition:box-shadow .25s ease,background .25s ease}
+.help-answer.is-empty{background:linear-gradient(145deg,#f3fbfa,#f7f3ff);border-color:rgba(130,104,218,.16)}
+.help-answer.refreshing{animation:helpAnswerSwap .45s cubic-bezier(.2,.8,.2,1) both}
+.help-answer.is-empty .help-answer-icon{background:linear-gradient(145deg,var(--lav),var(--mint))}
+.help-answer.is-empty .copy-phrase{visibility:hidden;pointer-events:none}
+.help-answer[aria-hidden="true"] .help-phrase{opacity:.8}
+@keyframes helpAnswerSwap{0%{opacity:.38;transform:translateY(10px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.help-answer-icon{width:58px;height:58px;display:grid;place-items:center;border-radius:18px;background:#fff;font-size:29px}
+.help-answer h3{margin:0;color:var(--navy);font-size:22px}
+.help-answer p{margin:5px 0 0;font-size:13px;line-height:1.35}
+.help-answer ul{grid-column:1/-1;margin:0;padding:0 0 0 20px;color:var(--muted);font-size:12px;line-height:1.35;align-self:center}
+.help-phrase{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:3px 9px;align-items:center;padding:10px 12px;border-radius:14px;background:#fff;color:var(--navy);font-size:12px}
+.help-phrase strong{color:var(--teal)}
+.help-phrase strong{grid-column:1/-1;font-size:11px}
+.help-phrase span{grid-column:1;font-style:italic;line-height:1.3;min-width:0}
+.copy-phrase{grid-column:2;grid-row:2;align-self:center;border:0;border-radius:10px;padding:7px 9px;background:var(--lav);color:var(--purple);font-size:11px;font-weight:950;cursor:pointer}
+.copy-phrase:disabled{opacity:.55;cursor:default}
+.help-phrase small{grid-column:1/-1;min-height:12px;color:var(--teal);font-size:10px}
+.help-note{margin:13px 0 0!important;color:var(--muted);font-size:11px!important;line-height:1.4!important}
+
+@media(max-width:699px){
+  .lab-heading{display:block}
+  .lab-counter{display:inline-flex;margin-top:2px}
+  .swipe-stage{min-height:286px}
+  .myth-swipe-card{min-height:248px;padding:28px 20px 22px;border-radius:25px}
+  .swipe-feedback{font-size:12px}
+  .glass-wrap{height:280px}
+  .glass-card{height:220px}
+  .duration-options{grid-template-columns:1fr;gap:8px;margin-top:14px}
+  .duration-option{min-height:70px;display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;gap:2px 8px;padding:10px 12px}
+  .duration-option span{grid-row:1/-1;align-self:center}
+  .duration-option b,.duration-option small{align-self:end}
+  .pause-plan{grid-template-columns:46px minmax(0,1fr);padding:14px;gap:6px 10px}
+  .pause-plan-icon{width:46px;height:46px;border-radius:14px;font-size:23px}
+  .pause-plan-copy h3{font-size:20px}
+  .pause-actions{flex-direction:column}
+  .pause-actions .action,.pause-actions .quiet-action{width:100%}
+  .wheel-layout,.wheel-layout.has-result{grid-template-columns:1fr;gap:12px;max-width:410px}
+  .wheel-wrap{width:min(88vw,360px)}
+  .wheel-label{font-size:18px}
+  .wheel-label.long{font-size:15px}
+  .wheel-result{padding:17px}
+  .help-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+  .help-option{grid-template-columns:30px minmax(0,1fr);gap:2px 7px;min-height:64px;padding:10px;border-radius:16px}
+  .help-option span{width:30px;height:30px;border-radius:10px;font-size:17px}
+  .help-option b{font-size:12px}
+  .help-option small{font-size:10px;line-height:1.15}
+  .help-option-wide{grid-column:1/-1}
+  .help-answer{grid-template-columns:48px minmax(0,1fr);height:276px;min-height:276px;padding:14px;gap:6px 10px}
+  .help-answer-icon{width:48px;height:48px;font-size:24px}
+  .help-answer h3{font-size:18px;line-height:1.12}
+  .help-answer p{font-size:12px;line-height:1.3}
+  .help-answer ul{font-size:11px;line-height:1.3}
+}
+
+@media(max-width:420px){
+  .myth-swipe-card{min-height:232px}
+  .swipe-stage{min-height:270px}
+  .glass-wrap{height:250px}
+  .glass-card{height:195px}
+  .glass-word{font-size:19px}
+  .wheel-center{width:66px;height:66px}
+  .wheel-center::before{font-size:20px}
+}
+
+/* Sin scroll: cada página se ajusta al espacio disponible. */
+body.responsive-ui .slide{
+  overflow:hidden;
+}
+body.responsive-ui .slide > .card{
+  max-height:none;
+  overflow:visible;
+  transform:scale(var(--fit-scale,1));
+  transform-origin:center center;
+}
+body.responsive-ui .slide.active > .card.reveal{
+  opacity:1;
+  animation:none;
+  transform:scale(var(--fit-scale,1));
+}
+
+/* En ventanas bajas el panel parte desde arriba; así la escala no lo
+   desplaza hacia fuera de la pantalla al calcular su tamaño. */
+@media(max-height:640px){
+  body.responsive-ui .slide > .card{
+    transform-origin:center top;
+  }
+}
+
+/* =========================================================
+   SISTEMA DE ESCALA FINAL
+   Las tarjetas conservan su composición y se reducen completas
+   cuando el espacio vertical u horizontal no alcanza.
+   ========================================================= */
+body.responsive-ui .slide > .card{
+  min-width:0;
+  width:min(100%,1120px);
+}
+body.responsive-ui .slide > .card > *{
+  min-width:0;
+  max-width:100%;
+}
+body.responsive-ui .stack > *,
+body.responsive-ui .tip-grid > *,
+body.responsive-ui .myth-grid > *,
+body.responsive-ui .report > *,
+body.responsive-ui .duration-options > *,
+body.responsive-ui .help-grid > *,
+body.responsive-ui .wheel-layout > *{
+  min-width:0;
+}
+body.responsive-ui h1,
+body.responsive-ui h2,
+body.responsive-ui h3,
+body.responsive-ui p,
+body.responsive-ui .small,
+body.responsive-ui .slogan,
+body.responsive-ui .eyebrow,
+body.responsive-ui .kicker{
+  max-width:100%;
+  overflow-wrap:break-word;
+  word-break:normal;
+  text-wrap:balance;
+}
+body.responsive-ui p,
+body.responsive-ui .small{
+  text-wrap:pretty;
+}
+body.responsive-ui .mini b,
+body.responsive-ui .mini span,
+body.responsive-ui .tip b,
+body.responsive-ui .myth-head{
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+body.responsive-ui button,
+body.responsive-ui .action,
+body.responsive-ui .interactive-hint{
+  max-width:100%;
+  white-space:normal;
+}
+
+@media(max-width:699px){
+  body.responsive-ui .card{
+    padding:clamp(14px,4vw,24px);
+    border-radius:clamp(20px,5vw,30px);
+  }
+  body.responsive-ui .hero{
+    padding:clamp(18px,6vw,30px) clamp(14px,5vw,30px);
+  }
+  body.responsive-ui h2{
+    font-size:clamp(28px,8vw,42px);
+    line-height:1;
+  }
+  body.responsive-ui .card > p{
+    font-size:clamp(13px,3.9vw,16px);
+    line-height:1.34;
+  }
+  body.responsive-ui .card > p.small{
+    font-size:clamp(12px,3.5vw,15px);
+  }
+  body.responsive-ui .stack,
+  body.responsive-ui .tip-grid,
+  body.responsive-ui .myth-grid,
+  body.responsive-ui .report,
+  body.responsive-ui .help-grid{
+    gap:clamp(7px,2.2vw,12px);
+  }
+}
+
+@media(max-width:340px){
+  body.responsive-ui .help-grid,
+  body.responsive-ui .tip-grid{
+    grid-template-columns:1fr;
+  }
+  body.responsive-ui .help-option-wide,
+  body.responsive-ui .tip.wide{
+    grid-column:auto;
+  }
+}
+
+@media(max-height:599px){
+  body.responsive-ui .slide{
+    padding-top:8px;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 72px);
+  }
+  body.responsive-ui .slide > .card{
+    padding-top:14px;
+    padding-bottom:14px;
+  }
+  body.responsive-ui .kicker{margin-bottom:6px;font-size:10px}
+  body.responsive-ui h2{font-size:clamp(27px,7vw,38px);margin-bottom:7px}
+  body.responsive-ui .interactive-hint{margin:4px 0 8px;padding:6px 9px;font-size:10px}
+  body.responsive-ui .breathe-area{height:170px}
+  body.responsive-ui .help-answer{height:248px;min-height:248px}
+}
+
+/* Teléfono en vertical: composición cómoda, no escritorio encogido. */
+@media(max-width:699px) and (min-height:600px){
+  body.responsive-ui .slide{
+    padding-top:14px;
+    padding-left:12px;
+    padding-right:12px;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 82px);
+    align-items:center;
+  }
+  body.responsive-ui .slide > .card{
+    padding:18px 16px;
+    background:rgba(255,255,255,.95);
+    box-shadow:0 14px 38px rgba(23,22,79,.12);
+  }
+  body.responsive-ui .card > .kicker{font-size:11px;letter-spacing:.10em}
+  body.responsive-ui h2{font-size:clamp(30px,8vw,42px);line-height:1.02}
+  body.responsive-ui .card > p{font-size:15px;line-height:1.38}
+  body.responsive-ui .card > p.small{font-size:13px;line-height:1.35}
+  body.responsive-ui .interactive-hint{margin:7px 0 11px;padding:8px 10px;font-size:11px}
+  body.responsive-ui .action{padding:13px 14px;border-radius:16px;font-size:14px}
+  body.responsive-ui .tip{min-height:104px}
+  body.responsive-ui .report-line{font-size:13px;line-height:1.3}
+}
+
+/* Ajustes puntuales de las experiencias que más espacio ocupan en móvil. */
+@media(max-width:699px){
+  body.responsive-ui .blob{
+    width:140px;
+    height:140px;
+    opacity:.18;
+  }
+  body.responsive-ui .slide > .card,
+  body.responsive-ui .wide-card,
+  body.responsive-ui .myth-lab,
+  body.responsive-ui .help-lab{
+    max-width:480px;
+  }
+  body.responsive-ui .myth-lab .swipe-stage{min-height:264px}
+  body.responsive-ui .myth-lab .myth-swipe-card{
+    min-height:226px;
+    padding:24px 18px 20px;
+  }
+  body.responsive-ui .myth-lab .myth-swipe-card h3{
+    margin:8px 0 14px;
+    font-size:clamp(21px,6vw,28px);
+  }
+  body.responsive-ui .fracture-lab .glass-wrap{height:244px}
+  body.responsive-ui .fracture-lab .glass-card{height:196px}
+  body.responsive-ui .fracture-lab .glass-word{font-size:clamp(16px,5.2vw,23px)}
+  body.responsive-ui .duration-options{margin:14px 0 12px;gap:8px}
+  body.responsive-ui .duration-option{min-height:66px}
+  body.responsive-ui .pause-plan-copy h3{font-size:20px}
+  body.responsive-ui .pause-breath .breathe-area{height:165px}
+  body.responsive-ui .wheel-layout{margin-top:10px}
+  body.responsive-ui .wheel-wrap{width:min(82vw,330px)}
+  body.responsive-ui .wheel-result{padding:16px}
+  body.responsive-ui .wheel-result h3{font-size:23px}
+  body.responsive-ui .help-option{min-height:60px}
+  body.responsive-ui .help-answer{margin-top:10px}
+  body.responsive-ui .mini,
+  body.responsive-ui .tip,
+  body.responsive-ui .myth,
+  body.responsive-ui .duration-option,
+  body.responsive-ui .help-option,
+  body.responsive-ui .report-line{
+    box-shadow:0 6px 16px rgba(23,22,79,.055);
+  }
+  body.responsive-ui .mini,
+  body.responsive-ui .tip,
+  body.responsive-ui .myth,
+  body.responsive-ui .duration-option,
+  body.responsive-ui .help-option{
+    border-color:rgba(23,22,79,.10);
+  }
+}
+
+/* En horizontal se aprovecha el ancho disponible, sin aplastar la tarjeta. */
+@media(max-width:699px) and (orientation:landscape){
+  body.responsive-ui .slide{
+    justify-content:flex-start;
+    align-items:center;
+    padding:10px 12px calc(env(safe-area-inset-bottom) + 58px);
+  }
+  body.responsive-ui .slide > .card{
+    width:min(100%,760px);
+    padding:14px 20px;
+    border-radius:20px;
+  }
+  body.responsive-ui .card > .kicker{margin-bottom:5px;font-size:10px}
+  body.responsive-ui h2{font-size:clamp(25px,5vw,34px);margin-bottom:6px}
+  body.responsive-ui .card > p{font-size:13px;line-height:1.3;margin:6px 0}
+  body.responsive-ui .interactive-hint{margin:4px 0 7px;padding:6px 9px;font-size:10px}
+  body.responsive-ui .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  body.responsive-ui .tip-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body.responsive-ui .tip.wide{grid-column:auto}
+  body.responsive-ui .myth-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body.responsive-ui .myth{padding:10px}
+  body.responsive-ui .report{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body.responsive-ui .breathe-area{height:135px}
+  body.responsive-ui .breathe-circle{width:112px;height:112px}
+  body.responsive-ui .myth-lab .swipe-stage{min-height:194px}
+  body.responsive-ui .myth-lab .myth-swipe-card{min-height:164px;padding:16px 22px}
+  body.responsive-ui .fracture-lab .glass-wrap{height:190px}
+  body.responsive-ui .fracture-lab .glass-card{height:154px}
+  body.responsive-ui .duration-options{grid-template-columns:repeat(3,minmax(0,1fr));margin:9px 0;gap:8px}
+  body.responsive-ui .duration-option{min-height:78px;padding:9px}
+  body.responsive-ui .wheel-layout{grid-template-columns:minmax(220px,280px) minmax(0,1fr);gap:14px;max-width:620px}
+  body.responsive-ui .wheel-layout.has-result{grid-template-columns:minmax(220px,280px) minmax(0,1fr);gap:14px}
+  body.responsive-ui .wheel-wrap{width:min(42vw,250px)}
+  body.responsive-ui .help-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+  body.responsive-ui .help-option-wide{grid-column:auto}
+  body.responsive-ui .help-option{grid-template-columns:30px minmax(0,1fr);min-height:54px;padding:8px}
+  body.responsive-ui .help-answer{height:214px;min-height:214px;margin-top:8px;padding:12px;gap:5px 9px}
+  body.responsive-ui .help-answer-icon{width:42px;height:42px;font-size:21px}
+  body.responsive-ui .help-answer h3{font-size:17px}
+  body.responsive-ui .help-answer p{font-size:11px;line-height:1.25}
+  body.responsive-ui .help-answer ul{font-size:10px;line-height:1.2}
+  body.responsive-ui .help-phrase{padding:7px 9px;font-size:10px}
+  body.responsive-ui .help-note{margin-top:6px!important;font-size:9px!important}
+  body.responsive-ui .nav{height:48px;bottom:4px}
+  body.responsive-ui .nav button{height:34px}
+}
+
+/* =========================================================
+   DIRECCIÓN VISUAL FINAL
+   Una sola apariencia: editorial, clara y consistente.
+   ========================================================= */
+body.responsive-ui .app{
+  background:
+    radial-gradient(circle at 8% 8%,rgba(130,104,218,.13),transparent 24%),
+    radial-gradient(circle at 94% 90%,rgba(8,125,116,.10),transparent 25%),
+    linear-gradient(145deg,#f8f9fd 0%,#f4f3fb 52%,#f5fbf9 100%);
+}
+body.responsive-ui .slide > .blob{
+  opacity:.14;
+  filter:blur(2px);
+}
+body.responsive-ui .slide > .card{
+  border:1px solid rgba(31,36,80,.09);
+  outline:0;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 24px 64px rgba(31,36,80,.12);
+  border-radius:28px;
+}
+body.responsive-ui .slide > .card:not(.hero){
+  text-align:left;
+}
+body.responsive-ui .slide > .card > .kicker{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:11px;
+  color:var(--teal);
+  letter-spacing:.14em;
+}
+body.responsive-ui .slide > .card > .kicker::before{
+  content:"";
+  width:22px;
+  height:3px;
+  flex:0 0 22px;
+  border-radius:99px;
+  background:var(--purple);
+}
+body.responsive-ui .slide > .card > h2{
+  color:#17164f;
+  letter-spacing:-.045em;
+  line-height:.98;
+}
+body.responsive-ui .slide > .card > p.small{
+  color:#696b7c;
+  max-width:760px;
+}
+body.responsive-ui .interactive-hint{
+  background:#f0edff;
+  color:#624bc2;
+  border:1px solid rgba(130,104,218,.16);
+  box-shadow:none;
+}
+body.responsive-ui .mini,
+body.responsive-ui .tip,
+body.responsive-ui .myth,
+body.responsive-ui .duration-option,
+body.responsive-ui .help-option,
+body.responsive-ui .report-line{
+  border:1px solid #e5e6ef;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(31,36,80,.065);
+}
+body.responsive-ui .mini:hover,
+body.responsive-ui .tip:hover,
+body.responsive-ui .help-option:hover,
+body.responsive-ui .duration-option:hover{
+  border-color:rgba(130,104,218,.36);
+  box-shadow:0 14px 28px rgba(31,36,80,.10);
+}
+body.responsive-ui .mini .icon,
+body.responsive-ui .help-option span{
+  background:linear-gradient(145deg,#ece8ff,#d9f5ec);
+}
+body.responsive-ui .tip{
+  border-top:4px solid var(--tip-accent,var(--purple));
+}
+body.responsive-ui .tip:nth-child(1){--tip-accent:#8268da}
+body.responsive-ui .tip:nth-child(2){--tip-accent:#087d74}
+body.responsive-ui .tip:nth-child(3){--tip-accent:#da4779}
+body.responsive-ui .tip:nth-child(4){--tip-accent:#de9b1f}
+body.responsive-ui .tip:nth-child(5){--tip-accent:#3b83c4}
+body.responsive-ui .myth{border-left:4px solid var(--purple)}
+body.responsive-ui .report-line{border-left:4px solid var(--purple)}
+body.responsive-ui .nav{
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(31,36,80,.10);
+  box-shadow:0 16px 44px rgba(31,36,80,.16);
+}
+body.responsive-ui .nav button{
+  background:#17164f;
+}
+body.responsive-ui .nav-center b{color:#17164f}
+body.responsive-ui .nav-center span{color:#6b6d7e}
+body.responsive-ui .action{
+  background:linear-gradient(100deg,#17164f,#624bc2);
+  box-shadow:0 12px 26px rgba(23,22,79,.20);
+}
+body.responsive-ui .hero{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+}
+body.responsive-ui .hero::before{
+  content:"";
+  position:absolute;
+  width:260px;
+  height:260px;
+  right:-104px;
+  top:-108px;
+  border-radius:50%;
+  background:linear-gradient(145deg,rgba(130,104,218,.18),rgba(8,125,116,.10));
+  pointer-events:none;
+}
+body.responsive-ui .hero > *{position:relative;z-index:1}
+body.responsive-ui .hero .slogan{
+  max-width:620px;
+  margin-left:auto;
+  margin-right:auto;
+  border:1px solid rgba(130,104,218,.12);
+  background:linear-gradient(100deg,#f0edff,#e8f8f2);
+}
+body.responsive-ui .myth-swipe-card{
+  border:1px solid #e2e3ef;
+  box-shadow:0 20px 48px rgba(31,36,80,.14);
+}
+body.responsive-ui .glass-card{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 20px 48px rgba(31,36,80,.16);
+}
+body.responsive-ui .help-answer{
+  border-color:rgba(8,125,116,.18);
+  box-shadow:0 12px 28px rgba(31,36,80,.08);
+}
+
+@media(max-width:699px){
+  body.responsive-ui .slide > .card{
+    border-radius:24px;
+    box-shadow:0 18px 42px rgba(31,36,80,.12);
+  }
+  body.responsive-ui .slide > .card > .kicker{margin-bottom:9px;font-size:10px}
+  body.responsive-ui .slide > .card > .kicker::before{width:18px;flex-basis:18px}
+  body.responsive-ui .slide > .card > h2{font-size:clamp(29px,8vw,39px)}
+  body.responsive-ui .slide > .card > p.small{max-width:100%}
+  body.responsive-ui .slide > .blob{display:none}
+  body.responsive-ui .hero::before{width:180px;height:180px;right:-80px;top:-72px}
+  body.responsive-ui .hero .slogan{font-size:18px}
+  body.responsive-ui .mini,
+  body.responsive-ui .tip,
+  body.responsive-ui .myth,
+  body.responsive-ui .duration-option,
+  body.responsive-ui .help-option,
+  body.responsive-ui .report-line{
+    box-shadow:0 6px 16px rgba(31,36,80,.06);
+  }
+}
+
+/* En móvil la lectura empieza arriba y cada tarjeta ocupa el ancho útil.
+   La altura fija del panel de ayuda evita que una respuesta larga encoja
+   toda la composición. */
+@media(max-width:699px) and (orientation:portrait){
+  body.responsive-ui .slide{
+    justify-content:flex-start;
+    padding-top:22px;
+  }
+  body.responsive-ui .slide > .card{
+    transform-origin:center top;
+  }
+  body.responsive-ui .help-answer{
+    height:228px;
+    min-height:228px;
+    padding:12px;
+    gap:5px 9px;
+  }
+  body.responsive-ui .help-answer-icon{width:44px;height:44px;font-size:22px}
+  body.responsive-ui .help-answer h3{font-size:18px;line-height:1.08}
+  body.responsive-ui .help-answer p{font-size:12px;line-height:1.25}
+  body.responsive-ui .help-answer ul{font-size:10.5px;line-height:1.22;padding-left:17px}
+  body.responsive-ui .help-phrase{padding:8px 10px;font-size:11px}
+  body.responsive-ui .help-note{margin-top:8px!important;font-size:10px!important;line-height:1.25!important}
+
+  /* Centro de ayuda: se compone para teléfono, no se reduce como una
+     miniatura. Tres filas claras mantienen la lectura y dejan respirar
+     el panel de respuesta. */
+  body.responsive-ui .help-lab{
+    padding:18px 14px 14px;
+    background:
+      radial-gradient(circle at 100% 0%,rgba(8,125,116,.08),transparent 30%),
+      linear-gradient(145deg,#fff 0%,#fbfcff 68%,#f4fbf8 100%);
+  }
+  body.responsive-ui .help-lab > h2{
+    max-width:310px;
+    margin-bottom:8px;
+    font-size:clamp(31px,8.6vw,36px);
+    line-height:.93;
+    letter-spacing:-.055em;
+  }
+  body.responsive-ui .help-lab > p.small{
+    max-width:330px;
+    margin:7px 0 10px;
+    font-size:12.5px;
+    line-height:1.18;
+  }
+  body.responsive-ui .help-grid{
+    gap:8px;
+    margin:10px 0 12px;
+  }
+  body.responsive-ui .help-option{
+    grid-template-columns:30px minmax(0,1fr);
+    min-height:52px;
+    padding:8px 9px;
+    border-radius:15px;
+    gap:3px 8px;
+  }
+  body.responsive-ui .help-option span{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    font-size:16px;
+  }
+  body.responsive-ui .help-option b{font-size:12px;line-height:1.12}
+  body.responsive-ui .help-option small{font-size:9.5px;line-height:1.2}
+  body.responsive-ui .help-answer{
+    grid-template-columns:40px minmax(0,1fr);
+    height:204px;
+    min-height:204px;
+    margin-top:10px;
+    padding:11px;
+    gap:6px 10px;
+    border-radius:20px;
+  }
+  body.responsive-ui .help-answer-icon{width:42px;height:42px;font-size:22px;border-radius:14px}
+  body.responsive-ui .help-answer .kicker{margin-bottom:5px;font-size:9px}
+  body.responsive-ui .help-answer h3{font-size:18px;line-height:1.1}
+  body.responsive-ui .help-answer p{margin-top:5px;font-size:11.5px;line-height:1.24}
+  body.responsive-ui .help-answer ul{font-size:10px;line-height:1.2;padding-left:16px}
+  body.responsive-ui .help-phrase{padding:8px 9px;font-size:10px;line-height:1.2}
+  body.responsive-ui .help-phrase strong{font-size:9.5px}
+  body.responsive-ui .help-phrase small{font-size:9px;min-height:11px}
+  body.responsive-ui .help-note{margin-top:8px!important;font-size:9px!important;line-height:1.25!important}
+}
+
+@media(max-width:699px) and (orientation:landscape){
+  body.responsive-ui .slide{padding-top:10px}
+  body.responsive-ui .slide > .card{transform-origin:center top}
+}
+
+/* =========================================================
+   RUTAS DE APOYO
+   Información directa, sin paneles que oculten la respuesta.
+   ========================================================= */
+body.responsive-ui .support-lab{max-width:860px!important}
+body.responsive-ui .support-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin:22px 0 16px;
+}
+body.responsive-ui .support-card{
+  min-width:0;
+  min-height:112px;
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  padding:15px;
+  border:1px solid #e2e5ef;
+  border-radius:20px;
+  background:#fff;
+  color:var(--navy);
+  text-decoration:none;
+  box-shadow:0 9px 24px rgba(31,36,80,.07);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+body.responsive-ui a.support-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(130,104,218,.42);
+  box-shadow:0 16px 30px rgba(31,36,80,.12);
+}
+body.responsive-ui .support-card-emergency{border-top:4px solid #da4779}
+body.responsive-ui .support-card-life{border-top:4px solid #087d74}
+body.responsive-ui .support-card-trust{border-top:4px solid #8268da}
+body.responsive-ui .support-icon{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  background:linear-gradient(145deg,#eeeaff,#dff7ef);
+  font-size:27px;
+}
+body.responsive-ui .support-copy{min-width:0;display:grid;gap:3px}
+body.responsive-ui .support-copy b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#7059ce}
+body.responsive-ui .support-copy strong{font-size:20px;line-height:1.05;overflow-wrap:anywhere}
+body.responsive-ui .support-copy small{font-size:12px;line-height:1.28;color:var(--muted)}
+body.responsive-ui .support-action{
+  align-self:center;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#201b67;
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+body.responsive-ui .support-action-static{background:#edf0fa;color:#5f6688}
+body.responsive-ui .support-reminder{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:4px;
+  padding:11px 13px;
+  border:1px solid rgba(130,104,218,.18);
+  border-radius:15px;
+  background:linear-gradient(100deg,#f3f0ff,#eefaf6);
+  color:var(--navy);
+}
+body.responsive-ui .support-reminder > span{font-size:23px;flex:0 0 auto}
+body.responsive-ui .support-reminder p{margin:0;font-size:12px;line-height:1.32}
+body.responsive-ui .support-source{text-align:center;margin:11px 0 0!important;font-size:10px!important;line-height:1.25!important}
+body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+
+@media(max-width:699px) and (orientation:portrait){
+  body.responsive-ui .support-lab{padding:18px 14px 14px}
+  body.responsive-ui .support-lab > h2{max-width:330px;margin-bottom:8px;line-height:.96}
+  body.responsive-ui .support-lab > p.small{max-width:330px;margin:7px 0 10px;font-size:13px;line-height:1.25}
+  body.responsive-ui .support-grid{grid-template-columns:1fr;gap:9px;margin:12px 0 12px}
+  body.responsive-ui .support-card{
+    min-height:70px;
+    grid-template-columns:42px minmax(0,1fr);
+    gap:9px;
+    padding:10px;
+    border-radius:16px;
+  }
+  body.responsive-ui .support-icon{width:42px;height:42px;border-radius:13px;font-size:21px}
+  body.responsive-ui .support-copy{gap:2px}
+  body.responsive-ui .support-copy b{font-size:9px;letter-spacing:.07em}
+  body.responsive-ui .support-copy strong{font-size:17px;line-height:1.04}
+  body.responsive-ui .support-copy small{font-size:10px;line-height:1.2}
+  body.responsive-ui .support-action{padding:7px 8px;font-size:9px}
+  body.responsive-ui .support-reminder{gap:8px;margin-top:3px;padding:9px 10px}
+  body.responsive-ui .support-reminder > span{font-size:20px}
+  body.responsive-ui .support-reminder p{font-size:10.5px;line-height:1.24}
+  body.responsive-ui .support-source{margin-top:8px!important;font-size:9px!important}
+}
+</style>
+</head>
+
+<body class="responsive-ui">
+<div class="rotate-message">
+  <div>
+    <span class="phone">📱</span>
+    <h2 class="rotate-title">Gira tu celular</h2>
+    <p>Para aprovechar mejor las tarjetas, usa la presentación en vertical.</p>
+  </div>
+</div>
+
+<div class="app">
+  <div class="progress-track"><div class="progress-bar" id="progress"></div></div>
+
+  <main class="deck">
+
+    <section class="slide active">
+      <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+      <div class="card hero reveal">
+        <div class="eyebrow">💜 Campaña escolar · Gestión del estrés</div>
+        <h1 class="reveal d1">El estrés<br><span>no tiene género</span></h1>
+        <div class="slogan reveal d2">Sentir, hablar y pedir ayuda también es cuidarte.</div>
+        <p class="small reveal d3">Un enfoque de autocuidado con perspectiva de género</p>
+        <button class="action intro-action reveal d4" onclick="nextSlide()">Comenzar la campaña&nbsp; →</button>
+        <div class="dots reveal d4" data-dots></div>
+      </div>
+      <div class="swipe-note"><span class="mobile-hint">Desliza ← → para continuar</span><span class="desktop-hint">Usa las flechas, el teclado o los botones para avanzar</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b4"></div>
+      <div class="card reveal">
+        <div class="kicker">01 · El foco de la campaña</div>
+        <h2>Gestionar el estrés</h2>
+        <p>No hablamos de todo el autocuidado. Nos enfocamos en <strong>cómo las personas jóvenes reconocen y manejan el estrés</strong>, antes de que se acumule.</p>
+        <div class="interactive-hint">👆 Toca una tarjeta para saber más</div>
+
+        <div class="stack">
+          <div class="mini interactive reveal d1" onclick="openInfo('estresQueEs')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🧠</div>
+            <div><b>¿Qué es?</b><span>Es una respuesta del cuerpo y la mente ante presión o preocupación.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d2" onclick="openInfo('estresSenales')">
+            <div class="tap-icon">i</div>
+            <div class="icon">⚡</div>
+            <div><b>Señales</b><span>Cansancio, irritabilidad, preocupación o dificultad para concentrarse.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d3" onclick="openInfo('estresCuidar')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🌱</div>
+            <div><b>¿Por qué cuidarlo?</b><span>Manejarlo ayuda a proteger el bienestar y evitar que se acumule.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b2"></div><div class="blob b3"></div>
+      <div class="card reveal">
+        <div class="kicker">02 · Perspectiva de género</div>
+        <h2>¿Qué tiene que ver el género?</h2>
+        <p>El estrés puede sentirse en cualquier persona, pero <strong>las expectativas sociales sobre el género pueden cambiar la forma en que se expresa o se enfrenta.</strong></p>
+        <div class="interactive-hint">👆 Toca cada idea</div>
+
+        <div class="stack">
+          <div class="mini interactive reveal d1" onclick="openInfo('generoHombres')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🧱</div>
+            <div><b>“Debes ser fuerte”</b><span>A algunos hombres se les puede presionar para ocultar miedo, tristeza o estrés.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d2" onclick="openInfo('generoMujeres')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🎯</div>
+            <div><b>“Debes cumplir con todo”</b><span>Algunas mujeres pueden recibir más presión sobre apariencia, comportamiento o cuidado de otros.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d3" onclick="openInfo('generoIdea')">
+            <div class="tap-icon">i</div>
+            <div class="icon">💜</div>
+            <div><b>Una idea más sana</b><span>Ningún género debe definir quién puede expresar emociones o pedir ayuda.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b3"></div>
+      <div class="card wide-card reveal myth-lab">
+        <div class="kicker">03 · Juego de mitos</div>
+        <div class="lab-heading">
+          <div>
+            <h2>¿Mito o realidad?</h2>
+            <p class="small">Arrastra la tarjeta: izquierda = mito, derecha = realidad.</p>
+          </div>
+          <span class="lab-counter" id="mythCount">1 / 10</span>
+        </div>
+
+        <div class="swipe-stage" id="mythStage">
+          <div class="myth-swipe-card" id="mythCard" role="group" aria-live="polite">
+            <div class="swipe-stamp stamp-myth" id="mythStamp">MITO</div>
+            <div class="swipe-stamp stamp-reality" id="mythRealityStamp">REALIDAD</div>
+            <div class="swipe-card-icon" id="mythIcon">🧱</div>
+            <div class="swipe-card-label">Frase para pensar</div>
+            <h3 id="mythPhrase">“Los hombres no deben llorar.”</h3>
+            <div class="swipe-direction"><span>← MITO</span><span>REALIDAD →</span></div>
+          </div>
+          <div class="swipe-feedback" id="mythFeedback" aria-live="polite"></div>
+        </div>
+
+        <div class="swipe-progress"><span id="mythProgress"></span></div>
+        <p class="swipe-score" id="mythScore">Respuestas correctas: 0</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b2"></div><div class="blob b4"></div>
+      <div class="card reveal">
+        <div class="kicker">04 · Efectos del estrés</div>
+        <h2>¿Cómo puede sentirse?</h2>
+        <div class="interactive-hint">👆 Toca una señal para ampliar</div>
+
+        <div class="stack">
+          <div class="mini interactive reveal d1" onclick="openInfo('concentracion')">
+            <div class="tap-icon">i</div>
+            <div class="icon">📚</div>
+            <div><b>Concentración</b><span>Puede costar más estudiar o mantener la atención.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d2" onclick="openInfo('sueno')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🌙</div>
+            <div><b>Sueño</b><span>Las preocupaciones pueden hacer más difícil descansar.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d3" onclick="openInfo('animo')">
+            <div class="tap-icon">i</div>
+            <div class="icon">💭</div>
+            <div><b>Estado de ánimo</b><span>Puede aparecer irritabilidad, cansancio o preocupación.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b2"></div><div class="blob b4"></div>
+      <div class="card reveal">
+        <div class="kicker">05 · Cómo manejarlo</div>
+        <h2>5 formas de gestionar el estrés</h2>
+        <div class="interactive-hint">👆 Todas las tarjetas son interactivas</div>
+
+        <div class="tip-grid">
+          <div class="tip interactive reveal d1" onclick="openInfo('reconocer')">
+            <div class="tap-icon">i</div>
+            <div class="emoji">🧠</div><b>Reconoce lo que sientes</b>
+          </div>
+
+          <div class="tip interactive reveal d1" onclick="openInfo('hablar')">
+            <div class="tap-icon">i</div>
+            <div class="emoji">💬</div><b>Habla con alguien de confianza</b>
+          </div>
+
+          <div class="tip interactive reveal d2" onclick="openInfo('descansar')">
+            <div class="tap-icon">i</div>
+            <div class="emoji">🌙</div><b>Descansa lo suficiente</b>
+          </div>
+
+          <div class="tip interactive reveal d2" onclick="openInfo('moverte')">
+            <div class="tap-icon">i</div>
+            <div class="emoji">🏃</div><b>Muévete o haz ejercicio</b>
+          </div>
+
+          <div class="tip wide interactive reveal d3" onclick="openInfo('disfrutar')">
+            <div class="tap-icon">i</div>
+            <div class="emoji">🎧</div><b>Haz una actividad que disfrutes</b>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b2"></div>
+      <div class="card reveal pause-lab">
+        <div class="kicker">06 · Construye tu pausa</div>
+        <h2>¿Cuánto tiempo tienes?</h2>
+        <p class="small">Elige una pausa realista para este momento. No tienes que hacerlo perfecto.</p>
+
+        <div class="duration-options" role="group" aria-label="Duración de la pausa">
+          <button class="duration-option" onclick="choosePause(30)" data-duration="30"><span>⚡</span><b>30 segundos</b><small>Respirar</small></button>
+          <button class="duration-option" onclick="choosePause(120)" data-duration="120"><span>🌿</span><b>2 minutos</b><small>Respirar y estirar</small></button>
+          <button class="duration-option" onclick="choosePause(600)" data-duration="600"><span>🧭</span><b>10 minutos</b><small>Desconectar y ordenar</small></button>
+        </div>
+
+        <div class="pause-plan" id="pausePlan" hidden>
+          <div class="pause-plan-icon" id="pausePlanIcon">⚡</div>
+          <div class="pause-plan-copy">
+            <div class="kicker" id="pausePlanKicker">Tu pausa de 30 segundos</div>
+            <h3 id="pausePlanTitle">Baja el ritmo</h3>
+            <p id="pausePlanText">Sigue el círculo y deja que tu respiración se vuelva un poco más lenta.</p>
+          </div>
+          <div class="pause-steps" id="pauseSteps"></div>
+
+          <div class="pause-breath" id="pauseBreath" hidden>
+            <div class="breathe-area">
+              <div class="breathe-circle" id="breathCircle"></div>
+              <div class="breathe-label" id="breathLabel">Toca para comenzar</div>
+            </div>
+          </div>
+
+          <div class="pause-actions">
+            <button class="action" id="pauseAction" onclick="startPause()">▶ Empezar</button>
+            <button class="quiet-action" onclick="anotherPause()">Dame otra</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b3"></div><div class="blob b4"></div>
+      <div class="card reveal fracture-lab">
+        <div class="kicker">07 · Rompe el estereotipo</div>
+        <h2>Toca el cristal</h2>
+        <p class="small">Cada toque abre una grieta. Después de varios golpes, la idea se rompe.</p>
+
+        <div class="glass-wrap" id="glassWrap">
+          <div class="glass-message" id="glassMessage">
+            <span class="glass-message-icon">💜</span>
+            <strong>Expresar lo que sientes<br>no te hace menos fuerte.</strong>
+          </div>
+          <button class="glass-card" id="glassCard" type="button" aria-label="Romper estereotipo tocando el cristal">
+            <span class="glass-shine"></span>
+            <span class="glass-word" id="glassWord">LOS HOMBRES<br>NO DEBEN LLORAR</span>
+            <span class="glass-hint">toca para romper</span>
+            <svg class="crack-svg" id="crackSvg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+          </button>
+          <div class="glass-shards" id="glassShards" aria-hidden="true"></div>
+        </div>
+
+        <div class="stereotype-options" role="group" aria-label="Elegir estereotipo">
+          <button class="stereotype-option active" onclick="chooseStereotype('llorar',this)">No debes llorar</button>
+          <button class="stereotype-option" onclick="chooseStereotype('ayuda',this)">Pedir ayuda es debilidad</button>
+          <button class="stereotype-option" onclick="chooseStereotype('perfecta',this)">Debes verte perfecta</button>
+          <button class="stereotype-option" onclick="chooseStereotype('todo',this)">Puedes con todo</button>
+        </div>
+        <p class="fracture-count" id="fractureCount">0 / 4 toques</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b2"></div>
+      <div class="card reveal wheel-lab">
+        <div class="kicker">08 · Elige una acción</div>
+        <h2>Ruleta de autocuidado</h2>
+        <p class="small">No siempre necesitas una solución enorme. A veces basta con una pausa pequeña y posible.</p>
+
+        <div class="wheel-layout">
+          <div class="wheel-wrap" id="wheelWrap">
+            <div class="wheel-pointer" aria-hidden="true"></div>
+            <svg class="care-wheel" id="careWheel" viewBox="0 0 420 420" role="button" tabindex="0" aria-label="Girar ruleta de autocuidado">
+              <g id="wheelDisc"></g>
+              <circle class="wheel-ring" cx="210" cy="210" r="207"></circle>
+            </svg>
+            <button class="wheel-center" type="button" onclick="spinCare()" aria-label="Girar ruleta">▶</button>
+          </div>
+
+          <div class="wheel-result" id="wheelResult" hidden>
+            <div class="wheel-result-icon" id="wheelResultIcon">🌿</div>
+            <div class="kicker">Tu siguiente paso</div>
+            <h3 id="wheelResultTitle">Estírate</h3>
+            <p id="wheelResultText">Afloja hombros, cuello y manos durante un minuto.</p>
+          </div>
+        </div>
+        <button class="quiet-action" id="spinAgain" onclick="spinCare()" hidden>Girar otra vez</button>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b3"></div><div class="blob b4"></div>
+      <div class="card reveal help-lab support-lab">
+        <div class="kicker">09 · Rutas de apoyo</div>
+        <h2>¿Dónde puedes buscar ayuda?</h2>
+        <p class="small">No tienes que resolverlo a solas. Guarda estas opciones para saber a quién acudir.</p>
+
+        <div class="support-grid">
+          <div class="support-card support-card-emergency">
+            <span class="support-icon">🚨</span>
+            <span class="support-copy"><b>Emergencia · 24/7</b><strong>911</strong><small>Úsalo si hay peligro inmediato o alguien puede lastimarse.</small></span>
+          </div>
+          <div class="support-card support-card-life">
+            <span class="support-icon">☎️</span>
+            <span class="support-copy"><b>Línea de la Vida · 24/7</b><strong>800 911 2000</strong><small>Orientación gratuita en salud mental y crisis emocionales.</small></span>
+          </div>
+          <div class="support-card">
+            <span class="support-icon">🏫</span>
+            <span class="support-copy"><b>En tu escuela</b><strong>Orientación o tutoría</strong><small>Acércate a un docente, tutor/a, psicología u orientación educativa.</small></span>
+          </div>
+          <div class="support-card support-card-trust">
+            <span class="support-icon">🤝</span>
+            <span class="support-copy"><b>Da el primer paso</b><strong>Adulto de confianza</strong><small>Puede ser alguien de tu familia, una autoridad escolar o una persona que te haga sentir seguro/a.</small></span>
+          </div>
+        </div>
+
+        <div class="support-reminder"><span>💜</span><p><b>Si no sabes por dónde empezar:</b> habla con una persona adulta de confianza. Si la situación es urgente, llama al 911.</p></div>
+        <p class="help-note support-source">Fuentes oficiales: <a href="https://www.gob.mx/lineadelavida" target="_blank" rel="noopener">Línea de la Vida</a> · <a href="https://www.gob.mx/911/articulos/que-es-9-1-1-conoce-mas-de-911emergencias?idiom=es%2F1000" target="_blank" rel="noopener">911 Emergencias</a></p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b2"></div>
+      <div class="card reveal">
+        <div class="kicker">10 · Objetivo</div>
+        <h2>¿Qué queremos lograr?</h2>
+        <div class="interactive-hint">👆 Toca cada objetivo</div>
+
+        <div class="stack">
+          <div class="mini interactive reveal d1" onclick="openInfo('concientizar')">
+            <div class="tap-icon">i</div>
+            <div class="icon">📢</div>
+            <div><b>Reconocer el estrés</b><span>Identificar sus señales antes de sentirse completamente saturado.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d2" onclick="openInfo('romperEstereotipos')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🔓</div>
+            <div><b>Romper estereotipos</b><span>Recordar que expresar emociones no pertenece a un género.</span></div>
+          </div>
+
+          <div class="mini interactive reveal d3" onclick="openInfo('normalizar')">
+            <div class="tap-icon">i</div>
+            <div class="icon">🤝</div>
+            <div><b>Normalizar pedir apoyo</b><span>Buscar ayuda puede ser una forma responsable de manejar el estrés.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b2"></div><div class="blob b3"></div>
+      <div class="card wide-card reveal">
+        <div class="kicker">11 · Lo esencial</div>
+        <h2>Lo que queremos que recuerdes</h2>
+        <div class="report">
+          <div class="report-line reveal d1">El estrés es una respuesta humana; reconocerlo es el primer paso.</div>
+          <div class="report-line reveal d1">Puede afectar el sueño, la concentración y el estado de ánimo.</div>
+          <div class="report-line reveal d2">Las expectativas de género pueden cambiar la forma de expresarlo o enfrentarlo.</div>
+          <div class="report-line reveal d2">Hablar, descansar, moverte y pedir apoyo son estrategias válidas.</div>
+          <div class="report-line reveal d3">Sentir, hablar y pedir ayuda no tiene género.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="blob b1"></div><div class="blob b3"></div><div class="blob b4"></div>
+      <div class="card hero reveal">
+        <div class="eyebrow">✨ 12 · Cierre</div>
+        <h2 class="reveal d1" style="font-size:39px">Sentir, hablar y pedir ayuda no tiene género.</h2>
+        <div class="slogan reveal d2">Gestionar el estrés también es cuidarte.</div>
+        <p class="small reveal d3">Fuentes sugeridas: UNICEF México · Organización Mundial de la Salud · Material de clase.</p>
+        <button class="action reveal d4" onclick="goToSlide(0)">↻ Volver al inicio</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="tap-zone left" onclick="prevSlide()" aria-label="Anterior"></div>
+  <div class="tap-zone right" onclick="nextSlide()" aria-label="Siguiente"></div>
+
+  <nav class="nav">
+    <button id="prevButton" onclick="prevSlide()" aria-label="Anterior">←</button>
+    <div class="nav-center">
+      <b id="counter" aria-live="polite">1 / 11</b>
+      <span id="sectionName" aria-live="polite">Inicio</span>
+    </div>
+    <button id="nextButton" onclick="nextSlide()" aria-label="Siguiente">→</button>
+  </nav>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" onclick="backdropClose(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+
+    <div class="modal-top">
+      <div class="modal-icon" id="modalIcon">🧠</div>
+      <h3 class="modal-title" id="modalTitle">Título</h3>
+      <button class="modal-close" onclick="closeInfo()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p id="modalText"></p>
+      <button class="modal-action" onclick="closeInfo()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+const names = [
+  'Inicio',
+  'Gestión del estrés',
+  'Perspectiva de género',
+  'Mito o realidad',
+  'Efectos del estrés',
+  'Cómo manejarlo',
+  'Construye tu pausa',
+  'Rompe el estereotipo',
+  'Ruleta de autocuidado',
+  'Centro de ayuda',
+  'Objetivo',
+  'Lo esencial',
+  'Cierre'
+];
+
+const info = {
+  estresQueEs:{
+    icon:'🧠',
+    title:'¿Qué es el estrés?',
+    text:'Es una respuesta natural ante situaciones que sentimos como exigentes, inciertas o difíciles. En pequeñas cantidades puede ayudarnos a reaccionar, pero si se acumula puede afectar nuestro bienestar.'
+  },
+  estresSenales:{
+    icon:'⚡',
+    title:'Señales de estrés',
+    text:'Puede aparecer como tensión, cansancio, preocupación, irritabilidad, dificultad para dormir o para concentrarse.'
+  },
+  estresCuidar:{
+    icon:'🌱',
+    title:'Gestionar el estrés',
+    text:'No significa eliminar todos los problemas, sino aprender a reconocer lo que sentimos y usar estrategias saludables para manejar la presión.'
+  },
+
+  generoHombres:{
+    icon:'🧱',
+    title:'“Debes ser fuerte”',
+    text:'A algunos hombres se les puede enseñar a ocultar tristeza, miedo o preocupación. Esa presión puede dificultar que expresen el estrés o pidan apoyo.'
+  },
+  generoMujeres:{
+    icon:'🎯',
+    title:'“Debes cumplir con todo”',
+    text:'Algunas mujeres pueden enfrentar presiones relacionadas con la apariencia, el comportamiento o el cuidado de otras personas, lo que también puede aumentar el estrés.'
+  },
+  generoIdea:{
+    icon:'💜',
+    title:'Sin etiquetas de género',
+    text:'Expresar emociones, descansar o pedir ayuda son formas de autocuidado válidas para cualquier persona.'
+  },
+
+  noLlorar:{
+    icon:'💧',
+    title:'“Los hombres no deben llorar”',
+    text:'Este estereotipo puede hacer que alguien esconda tristeza o preocupación para no parecer débil, aunque por dentro se sienta saturado.'
+  },
+  perfeccion:{
+    icon:'🎯',
+    title:'Exigencias de perfección',
+    text:'La presión por cumplir expectativas de belleza o comportamiento puede generar comparación, inseguridad y estrés.'
+  },
+  aguantarSolo:{
+    icon:'🧱',
+    title:'“Pedir ayuda es debilidad”',
+    text:'Pedir apoyo no significa ser menos capaz. A veces hablar con alguien es una de las mejores formas de manejar una situación difícil.'
+  },
+
+  concentracion:{
+    icon:'📚',
+    title:'Concentración',
+    text:'Cuando hay mucho estrés, parte de la atención se queda en las preocupaciones y puede ser más difícil estudiar o terminar una tarea.'
+  },
+  sueno:{
+    icon:'🌙',
+    title:'Sueño',
+    text:'Las preocupaciones pueden hacer más difícil relajarse, dormir o descansar profundamente.'
+  },
+  animo:{
+    icon:'💭',
+    title:'Estado de ánimo',
+    text:'El estrés puede hacer que una persona se sienta más irritable, cansada, preocupada o con menos motivación.'
+  },
+
+  reconocer:{
+    icon:'🧠',
+    title:'Reconoce lo que sientes',
+    text:'Identificar si estás preocupado, frustrado, cansado o nervioso puede ayudarte a entender qué necesitas.'
+  },
+  hablar:{
+    icon:'💬',
+    title:'Habla con alguien',
+    text:'Contar lo que te pasa a una persona de confianza puede ayudarte a sentir apoyo y a ver el problema desde otra perspectiva.'
+  },
+  descansar:{
+    icon:'🌙',
+    title:'Descansa lo suficiente',
+    text:'Dormir y hacer pausas permite recuperar energía y ayuda a manejar mejor las emociones y la concentración.'
+  },
+  moverte:{
+    icon:'🏃',
+    title:'Muévete',
+    text:'Caminar, estirarte, bailar o practicar algún deporte puede ayudar a liberar tensión acumulada.'
+  },
+  disfrutar:{
+    icon:'🎧',
+    title:'Haz algo que disfrutes',
+    text:'Dedicar un momento a una actividad agradable puede funcionar como una pausa mental y ayudarte a bajar el estrés.'
+  },
+
+  concientizar:{
+    icon:'📢',
+    title:'Reconocer el estrés',
+    text:'Queremos que los estudiantes identifiquen sus señales antes de llegar a sentirse completamente saturados.'
+  },
+  romperEstereotipos:{
+    icon:'🔓',
+    title:'Romper estereotipos',
+    text:'Sentir miedo, tristeza o estrés no pertenece a un género. Todas las personas pueden expresarlo y cuidarse.'
+  },
+  normalizar:{
+    icon:'🤝',
+    title:'Normalizar pedir apoyo',
+    text:'Buscar ayuda cuando una situación nos supera puede ser una decisión responsable y saludable.'
+  }
+};
+
+const mythDeck = [
+  {icon:'🧱', phrase:'“Los hombres no deben llorar.”', answer:'myth', explanation:'Mostrar tristeza no te hace menos fuerte. Guardarlo todo puede aumentar la presión.'},
+  {icon:'🌙', phrase:'“Dormir y hacer pausas ayuda a manejar el estrés.”', answer:'reality', explanation:'Descansar le da al cuerpo y a la mente una oportunidad de recuperarse.'},
+  {icon:'🎯', phrase:'“Debes verte perfecta para sentirte valiosa.”', answer:'myth', explanation:'Tu valor no depende de cumplir una expectativa de apariencia.'},
+  {icon:'💬', phrase:'“Hablar con alguien puede ser una forma de autocuidado.”', answer:'reality', explanation:'Poner en palabras lo que sientes puede ayudarte a encontrar apoyo y perspectiva.'},
+  {icon:'🏃', phrase:'“Pedir ayuda demuestra que no puedes con nada.”', answer:'myth', explanation:'Pedir apoyo es una decisión responsable cuando algo empieza a superarte.'},
+  {icon:'🧠', phrase:'“Reconocer las señales permite actuar antes de saturarte.”', answer:'reality', explanation:'Notar cansancio, irritabilidad o preocupación puede ayudarte a hacer una pausa a tiempo.'},
+  {icon:'🤝', phrase:'“Cuidarse y expresar emociones pertenece a un solo género.”', answer:'myth', explanation:'El autocuidado y las emociones son humanos; no tienen género.'},
+  {icon:'🎧', phrase:'“Una actividad que disfrutas puede ser una pausa mental.”', answer:'reality', explanation:'Escuchar música, caminar o crear algo puede ayudarte a bajar el ritmo.'},
+  {icon:'🧭', phrase:'“No tienes que resolver todo en el mismo momento.”', answer:'reality', explanation:'Separar pendientes y elegir un paso pequeño puede hacer que la situación se sienta más manejable.'},
+  {icon:'💜', phrase:'“Sentir estrés significa que eres débil.”', answer:'myth', explanation:'Sentir estrés es una respuesta humana. Lo importante es reconocerlo y buscar formas sanas de manejarlo.'}
+];
+
+let mythIndex = 0;
+let mythScore = 0;
+let mythDragging = false;
+let mythStartX = 0;
+let mythPointerId = null;
+let mythBusy = false;
+
+const pausePlans = {
+  30:{icon:'⚡',title:'Baja el ritmo',text:'Sigue el círculo y deja que tu respiración se vuelva un poco más lenta.',steps:['Inhala suavemente.','Suelta el aire sin prisa.','Repite hasta que termine la pausa.'],breath:true},
+  120:{icon:'🌿',title:'Respira y estira',text:'Dale dos minutos a tu cuerpo para soltar la tensión acumulada.',steps:['Haz tres respiraciones lentas.','Baja hombros y estira cuello y manos.','Mira a lo lejos y vuelve con calma.'],breath:false},
+  600:{icon:'🧭',title:'Ordena tu mente',text:'Diez minutos pueden ayudarte a recuperar un poco de control.',steps:['Camina o escucha una canción.','Escribe qué te preocupa.','Elige un pendiente pequeño para después.'],breath:false}
+};
+let selectedPause = null;
+
+const stereotypeData = {
+  llorar:{word:'LOS HOMBRES\nNO DEBEN LLORAR',message:'Expresar lo que sientes no te hace menos fuerte.'},
+  ayuda:{word:'PEDIR AYUDA\nES DEBILIDAD',message:'Pedir apoyo también es una forma de valentía.'},
+  perfecta:{word:'DEBES VERTE\nPERFECTA',message:'Tu valor no depende de cumplir una expectativa.'},
+  todo:{word:'TIENES QUE\nPODER CON TODO',message:'No tienes que poder con todo a la vez.'}
+};
+let selectedStereotype = 'llorar';
+let fractureHits = 0;
+let glassBroken = false;
+
+const careActivities = [
+  {icon:'🌬️',label:'Respira',title:'Respira',text:'Haz cuatro respiraciones lentas y nota cómo baja un poco el ritmo.'},
+  {icon:'🌿',label:'Estírate',title:'Estírate',text:'Afloja hombros, cuello, manos y espalda durante un minuto.'},
+  {icon:'💧',label:'Toma agua',title:'Toma agua',text:'Aléjate un momento de la pantalla y toma agua con calma.'},
+  {icon:'📵',label:'Aléjate',title:'Aléjate un momento',text:'Deja la pantalla dos minutos y mira algo que esté lejos.'},
+  {icon:'✍️',label:'Escribe',title:'Escribe',text:'Anota qué te preocupa y qué parte sí puedes atender hoy.'},
+  {icon:'💬',label:'Habla',title:'Habla con alguien',text:'Manda un mensaje sencillo: “¿Tienes un momento para escucharme?”'}
+];
+let wheelRotation = 0;
+let wheelSpinning = false;
+let wheelAnimationFrame = 0;
+
+function renderMythCard(){
+  const card = document.getElementById('mythCard');
+  if(!card) return;
+  const count = document.getElementById('mythCount');
+  const phrase = document.getElementById('mythPhrase');
+  const icon = document.getElementById('mythIcon');
+  const progress = document.getElementById('mythProgress');
+  const score = document.getElementById('mythScore');
+  const stamp = document.getElementById('mythStamp');
+  const realityStamp = document.getElementById('mythRealityStamp');
+
+  card.classList.remove('is-myth','is-reality','finished');
+  card.style.transform = '';
+  card.style.opacity = '';
+  stamp.style.opacity = '0';
+  realityStamp.style.opacity = '0';
+  realityStamp.textContent = 'REALIDAD';
+
+  if(mythIndex >= mythDeck.length){
+    card.classList.add('finished');
+    icon.textContent = '🎉';
+    phrase.textContent = '¡Terminaste el juego!';
+    document.querySelector('.swipe-card-label').textContent = 'Tu resultado';
+    document.querySelector('.swipe-direction').innerHTML = '<span>Identificaste</span><span>los estereotipos</span>';
+    stamp.textContent = 'LISTO';
+    stamp.className = 'swipe-stamp stamp-reality';
+    stamp.style.opacity = '1';
+    realityStamp.style.opacity = '0';
+    count.textContent = `${mythDeck.length} / ${mythDeck.length}`;
+    progress.style.width = '100%';
+    score.textContent = `${mythScore} / ${mythDeck.length} identificados`;
+    return;
+  }
+
+  const item = mythDeck[mythIndex];
+  icon.textContent = item.icon;
+  phrase.textContent = item.phrase;
+  stamp.textContent = 'MITO';
+  stamp.className = 'swipe-stamp stamp-myth';
+  realityStamp.className = 'swipe-stamp stamp-reality';
+  count.textContent = `${mythIndex+1} / ${mythDeck.length}`;
+  progress.style.width = `${(mythIndex/mythDeck.length)*100}%`;
+  score.textContent = `Respuestas correctas: ${mythScore}`;
+}
+
+function updateMythDrag(dx){
+  const card = document.getElementById('mythCard');
+  if(!card) return;
+  const rotation = Math.max(-13,Math.min(13,dx/12));
+  const strength = Math.min(Math.abs(dx)/115,1);
+  card.style.transform = `translate3d(${dx}px,${Math.abs(dx)*-.025}px,0) rotate(${rotation}deg)`;
+  card.classList.toggle('is-myth',dx < -8);
+  card.classList.toggle('is-reality',dx > 8);
+  card.style.setProperty('--stamp-strength',strength);
+  card.querySelector('.stamp-myth').style.opacity = dx < 0 ? strength : 0;
+  card.querySelector('.stamp-reality').style.opacity = dx > 0 ? strength : 0;
+}
+
+function startMythDrag(e){
+  if(mythBusy || mythIndex >= mythDeck.length) return;
+  mythDragging = true;
+  mythStartX = e.clientX;
+  mythPointerId = e.pointerId;
+  const card = document.getElementById('mythCard');
+  card.classList.add('dragging');
+  try{card.setPointerCapture(e.pointerId)}catch(_){ }
+  e.preventDefault();
+}
+
+function moveMythDrag(e){
+  if(!mythDragging || e.pointerId !== mythPointerId) return;
+  updateMythDrag(e.clientX-mythStartX);
+  e.preventDefault();
+}
+
+function finishMythDrag(e){
+  if(!mythDragging) return;
+  const card = document.getElementById('mythCard');
+  const dx = e ? e.clientX-mythStartX : 0;
+  mythDragging = false;
+  mythPointerId = null;
+  card.classList.remove('dragging');
+  try{card.releasePointerCapture(e.pointerId)}catch(_){ }
+
+  if(Math.abs(dx) < 95){
+    card.style.transform = '';
+    card.classList.remove('is-myth','is-reality');
+    card.querySelector('.stamp-myth').style.opacity = 0;
+    card.querySelector('.stamp-reality').style.opacity = 0;
+    return;
+  }
+  answerMyth(dx < 0 ? 'myth' : 'reality');
+}
+
+function answerMyth(choice){
+  if(mythBusy || mythIndex >= mythDeck.length) return;
+  mythBusy = true;
+  const item = mythDeck[mythIndex];
+  const correct = choice === item.answer;
+  if(correct) mythScore++;
+  const card = document.getElementById('mythCard');
+  const feedback = document.getElementById('mythFeedback');
+  const stamp = card.querySelector(choice === 'myth' ? '.stamp-myth' : '.stamp-reality');
+  stamp.style.opacity = 1;
+  stamp.textContent = choice === 'myth' ? 'MITO' : 'REALIDAD';
+  card.classList.add(choice === 'myth' ? 'is-myth' : 'is-reality');
+  card.style.transform = `translate3d(${choice === 'myth' ? '-125vw':'125vw'},${choice === 'myth' ? '-8px':'8px'},0) rotate(${choice === 'myth' ? '-22deg':'22deg'})`;
+  const label = correct ? '¡Bien identificado!' : 'Casi: revisa la explicación';
+  feedback.innerHTML = `<strong>${correct ? '✓' : '→'} ${label}</strong><br>${item.explanation}`;
+  feedback.classList.add('show');
+  buzz(correct ? 12 : 6);
+
+  setTimeout(()=>{
+    mythIndex++;
+    feedback.classList.remove('show');
+    renderMythCard();
+    mythBusy = false;
+  },1250);
+}
+
+function chooseStereotype(key,button){
+  selectedStereotype = key;
+  document.querySelectorAll('.stereotype-option').forEach(option=>option.classList.remove('active'));
+  if(button) button.classList.add('active');
+  const data = stereotypeData[key];
+  document.getElementById('glassWord').innerHTML = data.word.replace('\n','<br>');
+  document.getElementById('glassMessage').querySelector('strong').textContent = data.message;
+  resetGlass();
+}
+
+function resetGlass(){
+  fractureHits = 0;
+  glassBroken = false;
+  const wrap = document.getElementById('glassWrap');
+  const card = document.getElementById('glassCard');
+  if(!wrap || !card) return;
+  wrap.classList.remove('broken');
+  card.classList.remove('broken');
+  document.getElementById('crackSvg').innerHTML = '';
+  document.getElementById('glassShards').innerHTML = '';
+  document.getElementById('fractureCount').textContent = '0 / 4 toques';
+}
+
+function addCrack(x,y){
+  const svg = document.getElementById('crackSvg');
+  const ns = 'http://www.w3.org/2000/svg';
+  const base = Math.random()*Math.PI*2;
+  for(let i=0;i<7;i++){
+    const angle = base + i*(Math.PI*2/7) + (Math.random()-.5)*.45;
+    const length = 14 + Math.random()*20;
+    const x2 = Math.max(2,Math.min(98,x+Math.cos(angle)*length));
+    const y2 = Math.max(2,Math.min(98,y+Math.sin(angle)*length));
+    const line = document.createElementNS(ns,'line');
+    line.setAttribute('x1',x); line.setAttribute('y1',y); line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+    svg.appendChild(line);
+    if(i%2===0){
+      const branch = document.createElementNS(ns,'line');
+      const bx = x + (x2-x)*.58, by = y + (y2-y)*.58;
+      branch.setAttribute('x1',bx); branch.setAttribute('y1',by);
+      branch.setAttribute('x2',Math.max(2,Math.min(98,bx+Math.cos(angle+.85)*9)));
+      branch.setAttribute('y2',Math.max(2,Math.min(98,by+Math.sin(angle+.85)*9)));
+      svg.appendChild(branch);
+    }
+  }
+}
+
+function breakGlass(){
+  glassBroken = true;
+  const wrap = document.getElementById('glassWrap');
+  document.getElementById('glassCard').classList.add('broken');
+  wrap.classList.add('broken');
+  const shards = document.getElementById('glassShards');
+  for(let i=0;i<18;i++){
+    const shard = document.createElement('span');
+    shard.className = 'glass-shard';
+    shard.style.setProperty('--x',`${34+Math.random()*32}%`);
+    shard.style.setProperty('--y',`${28+Math.random()*42}%`);
+    shard.style.setProperty('--size',`${5+Math.random()*13}px`);
+    shard.style.setProperty('--tx',`${(Math.random()-.5)*270}px`);
+    shard.style.setProperty('--ty',`${70+Math.random()*180}px`);
+    shard.style.setProperty('--rot',`${(Math.random()-.5)*520}deg`);
+    shard.style.setProperty('--duration',`${.65+Math.random()*.65}s`);
+    shard.style.setProperty('--delay',`${Math.random()*.12}s`);
+    shards.appendChild(shard);
+  }
+  document.getElementById('fractureCount').textContent = '✦ Idea rota';
+  buzz(38);
+}
+
+function hitGlass(e){
+  if(glassBroken) return;
+  const card = document.getElementById('glassCard');
+  const rect = card.getBoundingClientRect();
+  const x = ((e.clientX || rect.left+rect.width/2)-rect.left)/rect.width*100;
+  const y = ((e.clientY || rect.top+rect.height/2)-rect.top)/rect.height*100;
+  addCrack(x,y);
+  fractureHits++;
+  document.getElementById('fractureCount').textContent = `${fractureHits} / 4 toques`;
+  buzz(7);
+  if(fractureHits >= 4) setTimeout(breakGlass,180);
+}
+
+function choosePause(seconds){
+  selectedPause = seconds;
+  const plan = pausePlans[seconds];
+  document.querySelectorAll('.duration-option').forEach(option=>option.classList.toggle('selected',Number(option.dataset.duration)===seconds));
+  if(breathing) toggleBreathing();
+  document.getElementById('pausePlan').hidden = false;
+  document.getElementById('pausePlanIcon').textContent = plan.icon;
+  document.getElementById('pausePlanKicker').textContent = `Tu pausa de ${seconds < 60 ? seconds+' segundos' : (seconds/60)+' minutos'}`;
+  document.getElementById('pausePlanTitle').textContent = plan.title;
+  document.getElementById('pausePlanText').textContent = plan.text;
+  document.getElementById('pauseSteps').innerHTML = plan.steps.map(step=>`<div class="pause-step">${step}</div>`).join('');
+  document.getElementById('pauseBreath').hidden = !plan.breath;
+  const pauseAction = document.getElementById('pauseAction');
+  pauseAction.classList.remove('is-running');
+  pauseAction.textContent = plan.breath ? '▶ Empezar respiración' : '✓ Empezar pausa';
+  requestAnimationFrame(fitSlides);
+}
+
+function startPause(){
+  if(!selectedPause) return;
+  const plan = pausePlans[selectedPause];
+  if(plan.breath){
+    toggleBreathing();
+  }else{
+    const action = document.getElementById('pauseAction');
+    action.textContent = '✓ Pausa en marcha';
+    action.classList.add('is-running');
+    buzz(10);
+  }
+}
+
+function anotherPause(){
+  const options = [30,120,600].filter(value=>value!==selectedPause);
+  choosePause(options[Math.floor(Math.random()*options.length)]);
+}
+
+function buildCareWheel(){
+  const disc = document.getElementById('wheelDisc');
+  if(!disc) return;
+
+  const cx = 210;
+  const cy = 210;
+  const radius = 204;
+  const labelRadius = 126;
+  const colors = ['#ef8fb8','#ffcf68','#48c69d','#78d7eb','#7fa4e8','#9b7be0'];
+  const centers = [0,60,120,180,240,300];
+  const rotations = [90,-30,30,90,-30,30];
+  const point = (angle,distance)=>{
+    const radians = (angle-90)*Math.PI/180;
+    return {x:cx+Math.cos(radians)*distance,y:cy+Math.sin(radians)*distance};
+  };
+
+  disc.innerHTML = careActivities.map((activity,index)=>{
+    const centerAngle = centers[index];
+    const start = point(centerAngle-30,radius);
+    const end = point(centerAngle+30,radius);
+    const label = point(centerAngle,labelRadius);
+    const labelText = activity.label || activity.title;
+    const long = labelText.length > 8 ? ' long' : '';
+    return `<path class="wheel-sector" fill="${colors[index]}" d="M ${cx} ${cy} L ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${radius} ${radius} 0 0 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)} Z"></path><text class="wheel-label${long}" x="${label.x.toFixed(2)}" y="${label.y.toFixed(2)}" transform="rotate(${rotations[index]} ${label.x.toFixed(2)} ${label.y.toFixed(2)})">${labelText}</text>`;
+  }).join('');
+}
+
+function animateWheelSpin(wheel,startRotation,endRotation,duration=3900){
+  cancelAnimationFrame(wheelAnimationFrame);
+  wheel.style.transition='none';
+
+  const startedAt = performance.now();
+  const distance = endRotation-startRotation;
+  let passedSections = 0;
+
+  return new Promise(resolve=>{
+    const frame = now=>{
+      const progress = Math.min(1,(now-startedAt)/duration);
+      // Aceleración rápida y desaceleración larga, como una rueda con peso.
+      const eased = 1-Math.pow(1-progress,4);
+      const currentRotation = startRotation+distance*eased;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      const sectionsPassed = Math.floor(Math.abs(currentRotation-startRotation)/60);
+      if(sectionsPassed>passedSections){
+        passedSections=sectionsPassed;
+        buzz(5);
+      }
+
+      if(progress<1){
+        wheelAnimationFrame=requestAnimationFrame(frame);
+      }else{
+        wheel.style.transform=`rotate(${endRotation}deg)`;
+        wheel.style.transition='';
+        resolve();
+      }
+    };
+    wheelAnimationFrame=requestAnimationFrame(frame);
+  });
+}
+
+function spinCare(){
+  if(wheelSpinning) return;
+  const wheel = document.getElementById('careWheel');
+  const result = document.getElementById('wheelResult');
+  const layout = document.querySelector('.wheel-layout');
+  const spinAgain = document.getElementById('spinAgain');
+  if(!wheel) return;
+  const hasPreviousResult = !result.hidden;
+  wheelSpinning = true;
+  if(hasPreviousResult){
+    // Conservamos la tarjeta mientras la rueda gira; solo cambia al llegar
+    // el nuevo resultado.
+    layout?.classList.add('has-result');
+    if(spinAgain) spinAgain.hidden = false;
+    result.classList.remove('refreshing');
+  }else{
+    result.hidden = true;
+    layout?.classList.remove('has-result');
+    if(spinAgain) spinAgain.hidden = true;
+  }
+  document.getElementById('wheelWrap').classList.remove('won');
+  requestFit();
+  const index = Math.floor(Math.random()*careActivities.length);
+  // Cada etiqueta tiene un centro cada 60°. Calculamos el desplazamiento
+  // desde la posición actual para que la opción bajo la flecha coincida
+  // siempre con la tarjeta, también después de varios giros.
+  const targetRotation = (360-(index*60))%360;
+  const currentRotation = ((wheelRotation%360)+360)%360;
+  const rotationDelta = (targetRotation-currentRotation+360)%360;
+  const startRotation = wheelRotation;
+  const endRotation = wheelRotation + 360*5 + rotationDelta;
+  wheelRotation = endRotation;
+  animateWheelSpin(wheel,startRotation,endRotation).then(()=>{
+    const activity = careActivities[index];
+    document.getElementById('wheelResultIcon').textContent = activity.icon;
+    document.getElementById('wheelResultTitle').textContent = activity.title;
+    document.getElementById('wheelResultText').textContent = activity.text;
+    result.hidden = false;
+    layout?.classList.add('has-result');
+    if(spinAgain) spinAgain.hidden = false;
+    result.classList.remove('refreshing');
+    void result.offsetWidth;
+    result.classList.add('refreshing');
+    setTimeout(()=>result.classList.remove('refreshing'),520);
+    document.getElementById('wheelWrap').classList.add('won');
+    wheelSpinning = false;
+    buzz(18);
+    requestAnimationFrame(fitSlides);
+  });
+}
+
+function fitSlides(){
+  slides.forEach(slide=>{
+    const card = [...slide.children].find(child=>child.classList?.contains('card'));
+    if(!card) return;
+
+    const slideStyle = getComputedStyle(slide);
+    const paddingTop = parseFloat(slideStyle.paddingTop) || 0;
+    const paddingBottom = parseFloat(slideStyle.paddingBottom) || 0;
+    const contentAvailable = Math.max(96,slide.clientHeight-paddingTop-paddingBottom);
+    // La navegación ya está contemplada en el padding inferior. Dejamos
+    // además un pequeño colchón para que ningún borde quede debajo de ella.
+    const viewportReserve = window.innerHeight < 700 ? 18 : 14;
+    const available = Math.max(84,Math.min(contentAvailable-viewportReserve,window.innerHeight-paddingTop-paddingBottom-viewportReserve));
+
+    // Medimos el contenido sin el límite heredado ni la transformación.
+    // scrollHeight por sí solo puede quedarse corto cuando una tarjeta
+    // cambió después de cargar; el rectángulo real cubre ambos casos.
+    const previous = {
+      transform:card.style.transform,
+      maxHeight:card.style.maxHeight,
+      height:card.style.height,
+      overflow:card.style.overflow,
+      animation:card.style.animation
+    };
+    card.style.setProperty('--fit-scale','1');
+    card.style.transform='none';
+    card.style.maxHeight='none';
+    card.style.height='auto';
+    card.style.overflow='visible';
+    card.style.animation='none';
+
+    const naturalBox = card.getBoundingClientRect();
+    const naturalHeight = Math.max(card.scrollHeight,naturalBox.height,1);
+    const scale = Math.min(1,available/naturalHeight);
+    // El ancho ya está controlado por la tarjeta y sus cuadrículas. No usamos
+    // scrollWidth aquí porque los adornos posicionados fuera de la tarjeta
+    // podían hacer que toda la composición se encogiera falsamente.
+    // En ventanas muy bajas se reduce la tarjeta completa antes que recortar
+    // una fila, un botón o una ilustración.
+    const safeScale = Math.max(.01,scale);
+    card.style.setProperty('--fit-scale',safeScale.toFixed(3));
+    card.style.transform = `scale(${safeScale.toFixed(3)})`;
+    card.style.maxHeight='none';
+    card.style.height=previous.height;
+    card.style.overflow='visible';
+    card.style.animation='none';
+  });
+}
+
+let fitFrame = 0;
+function requestFit(){
+  cancelAnimationFrame(fitFrame);
+  fitFrame = requestAnimationFrame(()=>{
+    fitSlides();
+    // Repetimos después del primer pintado para cubrir fuentes, cambios de
+    // texto y paneles que aparecen con `hidden=false`.
+    setTimeout(fitSlides,120);
+  });
+}
+
+let current = 0;
+let startX = 0;
+let startY = 0;
+let breathing = false;
+let breathTimer = null;
+let modalOpen = false;
+
+// Estado del arrastre de la ventanita
+let sheetDragging = false;
+let sheetStartY = 0;
+let sheetLastY = 0;
+let sheetLastTime = 0;
+let sheetVelocity = 0;
+let sheetPointerId = null;
+let sheetRAF = null;
+
+function buzz(ms=12){
+  if(navigator.vibrate) navigator.vibrate(ms);
+}
+
+function renderDots(){
+  const holder = document.querySelector('[data-dots]');
+  if(!holder) return;
+  holder.innerHTML = slides.map((_,i)=>
+    `<span class="dot ${i===current?'on':''}"></span>`
+  ).join('');
+}
+
+function updateUI(){
+  document.getElementById('counter').textContent = `${current+1} / ${slides.length}`;
+  document.getElementById('sectionName').textContent = names[current] || '';
+  document.getElementById('progress').style.width = `${((current+1)/slides.length)*100}%`;
+  document.getElementById('prevButton').disabled = current === 0;
+  document.getElementById('nextButton').disabled = current === slides.length - 1;
+  renderDots();
+}
+
+function paintCurrentSlide(index, shouldBuzz=false){
+  current = Math.max(0, Math.min(slides.length-1, index));
+
+  slides.forEach((slide,i)=>{
+    slide.classList.remove('active','before');
+    if(i < current) slide.classList.add('before');
+  });
+
+  slides[current].classList.add('active','in-view');
+  updateUI();
+  requestFit();
+  if(shouldBuzz) buzz();
+}
+
+function goToSlide(index){
+  if(modalOpen) return;
+
+  const target = Math.max(0, Math.min(slides.length-1, index));
+  paintCurrentSlide(target,true);
+}
+
+function nextSlide(){
+  if(current < slides.length-1) goToSlide(current+1);
+}
+
+function prevSlide(){
+  if(current > 0) goToSlide(current-1);
+}
+
+function openInfo(key){
+  const data = info[key];
+  if(!data) return;
+
+  modalOpen = true;
+  buzz(18);
+
+  document.getElementById('modalIcon').textContent = data.icon;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalText').textContent = data.text;
+
+  const modal = document.getElementById('modal');
+  const sheet = document.getElementById('modalSheet');
+
+  // Cada vez que se abre empieza completamente en su sitio.
+  sheet.classList.remove('dragging');
+  sheet.style.animation = '';
+  sheet.style.transition = '';
+  sheet.style.transform = '';
+  sheet.style.opacity = '';
+  modal.style.opacity = '';
+  modal.style.backgroundColor = '';
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInfo(dragged=false){
+  const modal = document.getElementById('modal');
+  const sheet = document.getElementById('modalSheet');
+
+  modalOpen = false;
+  sheetDragging = false;
+  sheet.classList.remove('dragging');
+
+  if(dragged){
+    // Continúa desde donde está hasta salir totalmente por abajo.
+    sheet.style.animation = 'none';
+    sheet.style.transition = 'transform .22s cubic-bezier(.32,.72,.3,1), opacity .18s ease';
+    sheet.style.transform = 'translate3d(0, 110vh, 0)';
+    sheet.style.opacity = '0';
+    modal.style.transition = 'opacity .20s ease';
+    modal.style.opacity = '0';
+
+    setTimeout(()=>{
+      modal.classList.remove('open');
+      modal.style.transition = '';
+      modal.style.opacity = '';
+      modal.style.backgroundColor = '';
+      sheet.style.animation = '';
+      sheet.style.transition = '';
+      sheet.style.transform = '';
+      sheet.style.opacity = '';
+    }, 230);
+  }else{
+    modal.classList.remove('open');
+    sheet.style.animation = '';
+    sheet.style.transition = '';
+    sheet.style.transform = '';
+    sheet.style.opacity = '';
+  }
+
+  document.body.style.overflow = '';
+  buzz(8);
+}
+
+function backdropClose(e){
+  if(e.target.id === 'modal') closeInfo();
+}
+
+
+/* ============================================
+   ARRASTRAR LA VENTANITA 1:1 CON EL DEDO
+   ============================================ */
+const dragHandle = document.querySelector('.modal-handle');
+const dragSheet = document.getElementById('modalSheet');
+const dragBackdrop = document.getElementById('modal');
+
+function applySheetPosition(y){
+  // Sin resistencia: la tarjeta se mueve exactamente los mismos px que el dedo.
+  const dy = Math.max(0, y);
+
+  if(sheetRAF) cancelAnimationFrame(sheetRAF);
+  sheetRAF = requestAnimationFrame(()=>{
+    dragSheet.style.transform = `translate3d(0, ${dy}px, 0)`;
+
+    // El fondo solo se aclara conforme baja, pero no afecta el movimiento.
+    const fade = Math.max(0, 1 - dy / Math.max(window.innerHeight * .72, 420));
+    dragBackdrop.style.backgroundColor = `rgba(14,13,45,${0.42 * fade})`;
+  });
+}
+
+function startSheetDrag(e){
+  if(!modalOpen) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  sheetDragging = true;
+  sheetPointerId = e.pointerId;
+  sheetStartY = e.clientY;
+  sheetLastY = e.clientY;
+  sheetLastTime = performance.now();
+  sheetVelocity = 0;
+
+  // IMPORTANTE: la animación de apertura deja de controlar transform.
+  dragSheet.style.animation = 'none';
+  dragSheet.style.transition = 'none';
+  dragSheet.style.transform = 'translate3d(0,0,0)';
+  dragSheet.classList.add('dragging');
+  dragBackdrop.classList.add('dragging');
+
+  try{ dragHandle.setPointerCapture(e.pointerId); }catch(_){}
+
+  buzz(5);
+}
+
+function moveSheetDrag(e){
+  if(!sheetDragging || e.pointerId !== sheetPointerId) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const now = performance.now();
+  const dt = Math.max(1, now - sheetLastTime);
+  sheetVelocity = (e.clientY - sheetLastY) / dt;
+  sheetLastY = e.clientY;
+  sheetLastTime = now;
+
+  const dy = Math.max(0, e.clientY - sheetStartY);
+  applySheetPosition(dy);
+}
+
+function finishSheetDrag(e){
+  if(!sheetDragging) return;
+  if(e && sheetPointerId !== null && e.pointerId !== sheetPointerId) return;
+
+  if(e){
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  const dy = Math.max(0, sheetLastY - sheetStartY);
+
+  sheetDragging = false;
+  dragSheet.classList.remove('dragging');
+  dragBackdrop.classList.remove('dragging');
+
+  try{
+    if(sheetPointerId !== null) dragHandle.releasePointerCapture(sheetPointerId);
+  }catch(_){}
+  sheetPointerId = null;
+
+  // Se cierra si ya bajaste aproximadamente 1/3 de la pantalla
+  // o si hiciste un "flick" claro hacia abajo.
+  const closeDistance = Math.min(window.innerHeight * .30, 230);
+  const shouldClose = dy >= closeDistance || (dy > 55 && sheetVelocity > 0.85);
+
+  if(shouldClose){
+    closeInfo(true);
+    return;
+  }
+
+  // Si no, vuelve desde EXACTAMENTE donde lo soltaste.
+  dragSheet.style.animation = 'none';
+  dragSheet.style.transition = 'transform .34s cubic-bezier(.22,1,.36,1)';
+  dragSheet.style.transform = 'translate3d(0,0,0)';
+  dragBackdrop.style.backgroundColor = '';
+
+  setTimeout(()=>{
+    if(modalOpen){
+      dragSheet.style.transition = '';
+      dragSheet.style.transform = '';
+      // No restauramos modalIn: ya está abierta y quieta.
+    }
+  }, 350);
+}
+
+dragHandle.addEventListener('pointerdown', startSheetDrag);
+dragHandle.addEventListener('pointermove', moveSheetDrag);
+dragHandle.addEventListener('pointerup', finishSheetDrag);
+dragHandle.addEventListener('pointercancel', finishSheetDrag);
+
+
+document.addEventListener('touchstart', e=>{
+  if(modalOpen || sheetDragging) return;
+  const t = e.changedTouches[0];
+  startX = t.screenX;
+  startY = t.screenY;
+},{passive:true});
+
+document.addEventListener('touchend', e=>{
+  if(modalOpen || sheetDragging) return;
+  const t = e.changedTouches[0];
+  const dx = t.screenX - startX;
+  const dy = t.screenY - startY;
+
+  if(Math.abs(dx) > 52 && Math.abs(dx) > Math.abs(dy)*1.25){
+    dx < 0 ? nextSlide() : prevSlide();
+  }
+},{passive:true});
+
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && modalOpen){
+    closeInfo();
+    return;
+  }
+  if(modalOpen) return;
+
+  if(e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if(e.key === 'ArrowLeft') prevSlide();
+});
+
+function toggleBreathing(){
+  breathing = !breathing;
+
+  const circle = document.getElementById('breathCircle');
+  const label = document.getElementById('breathLabel');
+  const button = document.getElementById('pauseAction') || document.getElementById('breathButton');
+
+  clearInterval(breathTimer);
+
+  if(breathing){
+    circle.classList.add('run');
+    button.textContent = '■ Detener respiración';
+
+    const steps = ['Inhala…','Mantén…','Exhala…','Descansa…'];
+    let i = 0;
+    label.textContent = steps[0];
+
+    breathTimer = setInterval(()=>{
+      i = (i+1)%steps.length;
+      label.textContent = steps[i];
+      if(navigator.vibrate) navigator.vibrate(8);
+    },2000);
+  }else{
+    circle.classList.remove('run');
+    label.textContent = 'Toca para comenzar';
+    button.textContent = '▶ Iniciar respiración';
+  }
+}
+
+const mythCardElement = document.getElementById('mythCard');
+if(mythCardElement){
+  mythCardElement.addEventListener('pointerdown',startMythDrag);
+  mythCardElement.addEventListener('pointermove',moveMythDrag);
+  mythCardElement.addEventListener('pointerup',finishMythDrag);
+  mythCardElement.addEventListener('pointercancel',finishMythDrag);
+  renderMythCard();
+}
+
+const glassCardElement = document.getElementById('glassCard');
+if(glassCardElement){
+  glassCardElement.addEventListener('click',hitGlass);
+  resetGlass();
+}
+
+const careWheelElement = document.getElementById('careWheel');
+if(careWheelElement){
+  buildCareWheel();
+  careWheelElement.addEventListener('keydown',event=>{
+    if(event.key === 'Enter' || event.key === ' '){
+      event.preventDefault();
+      spinCare();
+    }
+  });
+}
+
+requestFit();
+window.addEventListener('resize',requestFit);
+window.addEventListener('orientationchange',()=>setTimeout(requestFit,80));
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(requestFit);
+if('ResizeObserver' in window){
+  const fitObserver = new ResizeObserver(requestFit);
+  slides.forEach(slide=>{
+    const card = [...slide.children].find(child=>child.classList?.contains('card'));
+    if(card) fitObserver.observe(card);
+  });
+}
+
+paintCurrentSlide(0,false);
+</script>
+</body>
+</html>
+
