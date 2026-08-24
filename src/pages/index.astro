@@ -3970,6 +3970,22 @@ if('ResizeObserver' in window){
 }
 
 paintCurrentSlide(0,false);
+
+// Astro procesa este bloque como módulo; los atributos inline del HTML
+// necesitan encontrar estas funciones en el objeto global del navegador.
+Object.assign(window, {
+  nextSlide,
+  prevSlide,
+  goToSlide,
+  openInfo,
+  closeInfo,
+  backdropClose,
+  choosePause,
+  startPause,
+  anotherPause,
+  chooseStereotype,
+  spinCare
+});
 </script>
 </body>
 </html>
