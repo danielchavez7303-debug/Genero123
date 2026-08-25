@@ -1835,6 +1835,14 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
   display:grid;
   place-items:center;
 }
+.glass-surface{
+  position:relative;
+  z-index:3;
+  width:min(100%,420px);
+  height:250px;
+  display:grid;
+  place-items:center;
+}
 .glass-message{
   position:absolute;
   z-index:1;
@@ -1854,8 +1862,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .glass-card{
   position:relative;
   z-index:3;
-  width:min(100%,420px);
-  height:250px;
+  width:100%;
+  height:100%;
   overflow:hidden;
   display:grid;
   place-items:center;
@@ -1883,8 +1891,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 @keyframes glassShine{0%,35%{left:-35%}70%,100%{left:120%}}
 .glass-word{position:relative;z-index:1;font-size:clamp(19px,3vw,31px);font-weight:1000;line-height:1.02}
 .glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
-.crack-svg{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
-.crack-svg line{stroke:rgba(38,43,94,.70);stroke-width:.55;stroke-linecap:round;filter:drop-shadow(0 0 1px rgba(255,255,255,.8));animation:crackIn .22s ease both}
+.crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible}
+.crack-svg line{stroke:rgba(20,28,79,.92);stroke-width:1.25;stroke-linecap:round;filter:drop-shadow(0 0 1.6px rgba(255,255,255,.96)) drop-shadow(0 1px 1px rgba(20,28,79,.42));animation:crackIn .22s ease both}
 @keyframes crackIn{from{opacity:0;stroke-width:0}to{opacity:1}}
 .glass-shards{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:visible}
 .glass-shard{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(189,214,248,.45));border:1px solid rgba(255,255,255,.9);animation:shardFall var(--duration) cubic-bezier(.2,.8,.2,1) var(--delay) forwards}
@@ -1957,8 +1965,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .care-wheel{display:block;width:100%;height:100%;overflow:visible;transform-origin:50% 50%;transition:transform 3.8s cubic-bezier(.12,.78,.18,1);will-change:transform;filter:drop-shadow(0 16px 20px rgba(23,22,79,.14))}
 .wheel-sector{stroke:#fff;stroke-width:3;stroke-linejoin:round}
 .wheel-ring{fill:none;stroke:#fff;stroke-width:3}
-.wheel-label{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:21px;font-weight:950;letter-spacing:-.02em;fill:#172b66;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:rgba(255,255,255,.18);stroke-width:1px}
-.wheel-label.long{font-size:17px}
+.wheel-label{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:25px;font-weight:950;letter-spacing:-.025em;fill:#172b66;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:1.35px}
+.wheel-label.long{font-size:20px;letter-spacing:-.035em}
 .wheel-center{position:absolute;z-index:3;left:50%;top:50%;width:74px;height:74px;transform:translate(-50%,-50%);border:5px solid #fff;border-radius:50%;background:#edf6fb;color:var(--navy);font-size:0;box-shadow:0 5px 12px rgba(23,22,79,.16);cursor:pointer}
 .wheel-center::before{content:"▶";font-size:23px;line-height:1;margin-left:3px}
 .wheel-result{padding:22px;border-radius:22px;background:linear-gradient(145deg,#fff8e8,#f5f0ff);border:1px solid rgba(23,22,79,.12);box-shadow:0 12px 28px rgba(23,22,79,.08)}
@@ -2010,7 +2018,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
   .myth-swipe-card{min-height:248px;padding:28px 20px 22px;border-radius:25px}
   .swipe-feedback{font-size:12px}
   .glass-wrap{height:280px}
-  .glass-card{height:220px}
+  .glass-surface{height:220px}
+  .glass-card{height:100%}
   .duration-options{grid-template-columns:1fr;gap:8px;margin-top:14px}
   .duration-option{min-height:70px;display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;gap:2px 8px;padding:10px 12px}
   .duration-option span{grid-row:1/-1;align-self:center}
@@ -2022,8 +2031,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
   .pause-actions .action,.pause-actions .quiet-action{width:100%}
   .wheel-layout,.wheel-layout.has-result{grid-template-columns:1fr;gap:12px;max-width:410px}
   .wheel-wrap{width:min(88vw,360px)}
-  .wheel-label{font-size:18px}
-  .wheel-label.long{font-size:15px}
+  .wheel-label{font-size:23px}
+  .wheel-label.long{font-size:19px}
   .wheel-result{padding:17px}
   .help-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
   .help-option{grid-template-columns:30px minmax(0,1fr);gap:2px 7px;min-height:64px;padding:10px;border-radius:16px}
@@ -2042,8 +2051,11 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
   .myth-swipe-card{min-height:232px}
   .swipe-stage{min-height:270px}
   .glass-wrap{height:250px}
-  .glass-card{height:195px}
+  .glass-surface{height:195px}
+  .glass-card{height:100%}
   .glass-word{font-size:19px}
+  .wheel-label{font-size:21px}
+  .wheel-label.long{font-size:18px}
   .wheel-center{width:66px;height:66px}
   .wheel-center::before{font-size:20px}
 }
@@ -2227,7 +2239,8 @@ body.responsive-ui .interactive-hint{
     font-size:clamp(21px,6vw,28px);
   }
   body.responsive-ui .fracture-lab .glass-wrap{height:244px}
-  body.responsive-ui .fracture-lab .glass-card{height:196px}
+  body.responsive-ui .fracture-lab .glass-surface{height:196px}
+  body.responsive-ui .fracture-lab .glass-card{height:100%}
   body.responsive-ui .fracture-lab .glass-word{font-size:clamp(16px,5.2vw,23px)}
   body.responsive-ui .duration-options{margin:14px 0 12px;gap:8px}
   body.responsive-ui .duration-option{min-height:66px}
@@ -2283,7 +2296,8 @@ body.responsive-ui .interactive-hint{
   body.responsive-ui .myth-lab .swipe-stage{min-height:194px}
   body.responsive-ui .myth-lab .myth-swipe-card{min-height:164px;padding:16px 22px}
   body.responsive-ui .fracture-lab .glass-wrap{height:190px}
-  body.responsive-ui .fracture-lab .glass-card{height:154px}
+  body.responsive-ui .fracture-lab .glass-surface{height:154px}
+  body.responsive-ui .fracture-lab .glass-card{height:100%}
   body.responsive-ui .duration-options{grid-template-columns:repeat(3,minmax(0,1fr));margin:9px 0;gap:8px}
   body.responsive-ui .duration-option{min-height:78px;padding:9px}
   body.responsive-ui .wheel-layout{grid-template-columns:minmax(220px,280px) minmax(0,1fr);gap:14px;max-width:620px}
@@ -2882,12 +2896,14 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
             <span class="glass-message-icon">💜</span>
             <strong>Expresar lo que sientes<br>no te hace menos fuerte.</strong>
           </div>
-          <button class="glass-card" id="glassCard" type="button" aria-label="Romper estereotipo tocando el cristal">
-            <span class="glass-shine"></span>
-            <span class="glass-word" id="glassWord">LOS HOMBRES<br>NO DEBEN LLORAR</span>
-            <span class="glass-hint">toca para romper</span>
+          <div class="glass-surface">
+            <button class="glass-card" id="glassCard" type="button" aria-label="Romper estereotipo tocando el cristal">
+              <span class="glass-shine"></span>
+              <span class="glass-word" id="glassWord">LOS HOMBRES<br>NO DEBEN LLORAR</span>
+              <span class="glass-hint">toca para romper</span>
+            </button>
             <svg class="crack-svg" id="crackSvg" viewBox="0 0 100 100" aria-hidden="true"></svg>
-          </button>
+          </div>
           <div class="glass-shards" id="glassShards" aria-hidden="true"></div>
         </div>
 
@@ -3468,7 +3484,6 @@ function buildCareWheel(){
   const cx = 210;
   const cy = 210;
   const radius = 204;
-  const labelRadius = 126;
   const colors = ['#ef8fb8','#ffcf68','#48c69d','#78d7eb','#7fa4e8','#9b7be0'];
   const centers = [0,60,120,180,240,300];
   const rotations = [90,-30,30,90,-30,30];
@@ -3481,9 +3496,11 @@ function buildCareWheel(){
     const centerAngle = centers[index];
     const start = point(centerAngle-30,radius);
     const end = point(centerAngle+30,radius);
-    const label = point(centerAngle,labelRadius);
     const labelText = activity.label || activity.title;
     const long = labelText.length > 8 ? ' long' : '';
+    // Las frases largas necesitan quedar un poco más cerca del centro para
+    // no cortarse en los sectores laterales, sobre todo en teléfonos.
+    const label = point(centerAngle,long ? 111 : 130);
     return `<path class="wheel-sector" fill="${colors[index]}" d="M ${cx} ${cy} L ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${radius} ${radius} 0 0 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)} Z"></path><text class="wheel-label${long}" x="${label.x.toFixed(2)}" y="${label.y.toFixed(2)}" transform="rotate(${rotations[index]} ${label.x.toFixed(2)} ${label.y.toFixed(2)})">${labelText}</text>`;
   }).join('');
 }
