@@ -1902,7 +1902,7 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .glass-card.impact::after{
   animation:impactFlash .5s ease-out both;
 }
-.glass-card.broken{opacity:0;transform:scale(1.13) rotate(3deg);filter:blur(2px);pointer-events:none;animation:glassBreak .52s cubic-bezier(.2,.76,.24,1) both}
+.glass-card.broken{opacity:0;transform:scale(1.13) rotate(3deg);filter:blur(2px);pointer-events:none;animation:glassBreak .36s cubic-bezier(.2,.76,.24,1) both}
 .glass-shine{
   position:absolute;
   top:-40%;
@@ -1930,7 +1930,7 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 @keyframes glassBreak{0%{opacity:1;transform:scale(1);filter:none}18%{opacity:.96;transform:scale(1.012) rotate(-.5deg)}100%{opacity:0;transform:scale(1.1) rotate(1.5deg);filter:blur(5px)}}
 :global(.glass-wrap.broken .crack-svg){opacity:.28}
 .glass-shards{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:visible}
-.glass-shard{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(176,211,246,.54) 56%,rgba(255,255,255,.18));filter:drop-shadow(0 2px 2px rgba(23,36,92,.18));opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg);animation:shardBurst var(--duration) cubic-bezier(.18,.76,.18,1) var(--delay) forwards}
+:global(.glass-shard){position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(126,179,226,.68) 56%,rgba(255,255,255,.22));filter:drop-shadow(0 2px 2px rgba(23,36,92,.22));opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg);animation:shardBurst var(--duration) cubic-bezier(.18,.76,.18,1) var(--delay) forwards}
 @keyframes shardBurst{0%{opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg)}16%{opacity:.92;transform:translate3d(-50%,-50%,0) scale(1) rotate(calc(var(--rot) * .16))}100%{opacity:0;transform:translate3d(var(--tx),var(--ty),0) scale(.78) rotate(var(--rot))}}
 .stereotype-options{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .stereotype-option{
@@ -3413,6 +3413,7 @@ function resetGlass(){
   wrap.classList.remove('broken');
   card.classList.remove('broken');
   card.classList.remove('impact');
+  card.style.visibility = 'visible';
   card.style.removeProperty('--impact-x');
   card.style.removeProperty('--impact-y');
   document.getElementById('crackSvg').innerHTML = '';
@@ -3483,8 +3484,12 @@ function addCrack(x,y){
 function breakGlass(){
   glassBroken = true;
   const wrap = document.getElementById('glassWrap');
-  document.getElementById('glassCard').classList.add('broken');
+  const card = document.getElementById('glassCard');
+  card.classList.add('broken');
   wrap.classList.add('broken');
+  setTimeout(()=>{
+    if(glassBroken) card.style.visibility = 'hidden';
+  },390);
   const shards = document.getElementById('glassShards');
   const shardShapes = [
     'polygon(50% 0,100% 74%,28% 100%,0 38%)',
