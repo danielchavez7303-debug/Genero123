@@ -1916,7 +1916,7 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 @keyframes glassShine{0%,35%{left:-35%}70%,100%{left:120%}}
 .glass-word{position:relative;z-index:1;font-size:clamp(19px,3vw,31px);font-weight:1000;line-height:1.02}
 .glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
-.crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity .45s ease}
+.crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible;transform-origin:center;transition:opacity .28s ease .08s,transform .46s cubic-bezier(.2,.8,.2,1) .08s,filter .28s ease .08s}
 :global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawCrack .58s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
 :global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.78);stroke-width:4.8;filter:drop-shadow(0 1px 1px rgba(255,255,255,.72))}
 :global(.crack-svg .crack-shadow){stroke:rgba(18,36,92,.94);stroke-width:2.05;filter:drop-shadow(0 1px 1px rgba(14,24,70,.46))}
@@ -1928,7 +1928,7 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 @keyframes glassTap{0%,100%{transform:scale(1)}35%{transform:scale(.988)}70%{transform:scale(1.006)}}
 @keyframes impactFlash{0%{opacity:0;transform:scale(.72)}28%{opacity:1}100%{opacity:0;transform:scale(1.18)}}
 @keyframes glassBreak{0%{opacity:1;transform:scale(1);filter:none}18%{opacity:.96;transform:scale(1.012) rotate(-.5deg)}100%{opacity:0;transform:scale(1.1) rotate(1.5deg);filter:blur(5px)}}
-:global(.glass-wrap.broken .crack-svg){opacity:.28}
+:global(.glass-wrap.broken .crack-svg){opacity:0;transform:scale(1.035);filter:blur(1.1px)}
 .glass-shards{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:visible}
 :global(.glass-shard){position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(126,179,226,.68) 56%,rgba(255,255,255,.22));filter:drop-shadow(0 2px 2px rgba(23,36,92,.22));opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg);animation:shardBurst var(--duration) cubic-bezier(.18,.76,.18,1) var(--delay) forwards}
 @keyframes shardBurst{0%{opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg)}16%{opacity:.92;transform:translate3d(-50%,-50%,0) scale(1) rotate(calc(var(--rot) * .16))}100%{opacity:0;transform:translate3d(var(--tx),var(--ty),0) scale(.78) rotate(var(--rot))}}
@@ -3450,14 +3450,16 @@ function addCrack(x,y){
     let d = `M ${x1.toFixed(2)} ${y1.toFixed(2)}`;
     let px = x1;
     let py = y1;
+    const points = [{x:x1,y:y1}];
     for(let segment=1;segment<=segments;segment++){
       const progress = segment/segments;
       const wobble = (Math.random()-.5)*(segment===segments ? 3.2 : 5.2);
       px = clamp(x1 + Math.cos(angle)*length*progress + Math.cos(angle+Math.PI/2)*wobble);
       py = clamp(y1 + Math.sin(angle)*length*progress + Math.sin(angle+Math.PI/2)*wobble);
       d += ` L ${px.toFixed(2)} ${py.toFixed(2)}`;
+      points.push({x:px,y:py});
     }
-    return {d, x:px, y:py};
+    return {d, x:px, y:py, points};
   };
 
   // Cinco fracturas principales, con una o dos ramificaciones: se siente
@@ -3471,9 +3473,11 @@ function addCrack(x,y){
     makePath('crack-shadow',main.d,delay+18);
 
     if(i===1 || i===3){
-      const branchStart = .44 + Math.random()*.20;
-      const bx = x + Math.cos(angle)*length*branchStart;
-      const by = y + Math.sin(angle)*length*branchStart;
+      // La ramificación nace de un punto real de la fractura principal;
+      // así no quedan pequeñas marcas flotando separadas del cristal.
+      const anchor = main.points[1];
+      const bx = anchor.x;
+      const by = anchor.y;
       const branch = crackPath(bx,by,angle+(Math.random()>.5?1:-1)*(.65+Math.random()*.25),11+Math.random()*8,2);
       makePath('crack-highlight',branch.d,delay+50);
       makePath('crack-shadow',branch.d,delay+68);
@@ -3490,6 +3494,9 @@ function breakGlass(){
   setTimeout(()=>{
     if(glassBroken) card.style.visibility = 'hidden';
   },390);
+  setTimeout(()=>{
+    if(glassBroken) document.getElementById('crackSvg').innerHTML = '';
+  },760);
   const shards = document.getElementById('glassShards');
   const shardShapes = [
     'polygon(50% 0,100% 74%,28% 100%,0 38%)',
