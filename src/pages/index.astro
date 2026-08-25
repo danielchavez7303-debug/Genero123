@@ -311,6 +311,19 @@ p{
   animation:shine .45s ease;
 }
 
+button.mini,
+button.tip{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100%;
+  margin:0;
+  color:inherit;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+button.tip{text-align:center}
+
 .interactive .tap-icon{
   position:absolute;
   right:9px;
@@ -1917,17 +1930,16 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .glass-word{position:relative;z-index:1;font-size:clamp(19px,3vw,31px);font-weight:1000;line-height:1.02}
 .glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
 .crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible;transform-origin:center;transition:opacity .28s ease .08s,transform .46s cubic-bezier(.2,.8,.2,1) .08s,filter .28s ease .08s}
-:global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawCrack .48s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
-/* Dos capas muy finas: sombra azul debajo y brillo desplazado encima. */
-:global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.96);stroke-width:3.8;opacity:.78;filter:drop-shadow(0 1px 1px rgba(255,255,255,.72))}
-:global(.crack-svg .crack-shadow){stroke:rgba(14,29,82,.98);stroke-width:1.45;filter:drop-shadow(0 1px 1px rgba(14,24,70,.48))}
-:global(.crack-svg .crack-fine.crack-highlight){stroke-width:2.65;opacity:.68}
-:global(.crack-svg .crack-fine.crack-shadow){stroke-width:1.02;opacity:.9}
-:global(.crack-svg .crack-halo){stroke:rgba(255,255,255,.62);stroke-width:1.25;opacity:.48;stroke-dasharray:1.2 2.2}
-:global(.crack-svg .crack-impact){fill:none;stroke:rgba(18,36,92,.56);stroke-width:.75;stroke-dasharray:1.4 1.6;transform-box:fill-box;transform-origin:center;animation:impactPulse .72s ease-out var(--crack-delay,0ms) both}
-:global(.crack-svg .crack-impact-core){fill:rgba(23,36,92,.92);stroke:rgba(255,255,255,.98);stroke-width:.8;transform-box:fill-box;transform-origin:center;animation:impactCore .42s ease-out var(--crack-delay,0ms) both}
-:global(.crack-svg .crack-impact-star){fill:none;stroke:rgba(16,30,79,.9);stroke-width:1.05;stroke-linecap:round;opacity:.94;animation:impactCore .36s ease-out var(--crack-delay,0ms) both}
-@keyframes drawCrack{to{stroke-dashoffset:0}}
+:global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:none;stroke-dashoffset:0;animation:crackReveal .42s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
+/* Dos capas: un borde azul translúcido y una sombra oscura encima. */
+:global(.crack-svg .crack-highlight){stroke:rgba(133,187,226,.62);stroke-width:2.55;opacity:.62;filter:drop-shadow(0 1px 1px rgba(255,255,255,.68))}
+:global(.crack-svg .crack-shadow){stroke:rgba(12,27,76,.9);stroke-width:1.08;filter:drop-shadow(0 1px 1px rgba(14,24,70,.34))}
+:global(.crack-svg .crack-fine.crack-highlight){stroke:rgba(145,196,231,.54);stroke-width:1.82;opacity:.56}
+:global(.crack-svg .crack-fine.crack-shadow){stroke-width:.76;opacity:.78}
+:global(.crack-svg .crack-impact){fill:none;stroke:rgba(18,36,92,.38);stroke-width:.52;transform-box:fill-box;transform-origin:center;animation:impactPulse .72s ease-out var(--crack-delay,0ms) both}
+:global(.crack-svg .crack-impact-core){fill:rgba(255,255,255,.72);stroke:rgba(12,27,76,.58);stroke-width:.58;transform-box:fill-box;transform-origin:center;animation:impactCore .42s ease-out var(--crack-delay,0ms) both}
+:global(.crack-svg .crack-impact-star){fill:none;stroke:rgba(16,30,79,.74);stroke-width:.72;stroke-linecap:round;opacity:.78;animation:impactCore .36s ease-out var(--crack-delay,0ms) both}
+@keyframes crackReveal{from{stroke-opacity:0}to{stroke-opacity:1}}
 @keyframes impactPulse{0%{opacity:0;transform:scale(.35)}22%{opacity:.72}100%{opacity:.18;transform:scale(2.8)}}
 @keyframes impactCore{0%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1.15)}100%{opacity:.35;transform:scale(1)}}
 @keyframes glassTap{0%,100%{transform:scale(1)}35%{transform:scale(.988)}70%{transform:scale(1.006)}}
@@ -1951,6 +1963,7 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 }
 .stereotype-option:hover,.stereotype-option.active{background:var(--navy);color:#fff;transform:translateY(-2px)}
 .fracture-count{margin:9px 0 0!important;color:var(--muted);font-size:12px!important}
+.fracture-restart{display:block;margin:10px auto 0}
 
 .duration-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:20px 0 14px}
 .duration-option{
@@ -2742,23 +2755,23 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         <div class="interactive-hint">👆 Toca una tarjeta para saber más</div>
 
         <div class="stack">
-          <div class="mini interactive reveal d1" onclick="openInfo('estresQueEs')">
+          <button class="mini interactive reveal d1" type="button" onclick="openInfo('estresQueEs')">
             <div class="tap-icon">i</div>
             <div class="icon">🧠</div>
             <div><b>¿Qué es?</b><span>Es una respuesta del cuerpo y la mente ante presión o preocupación.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d2" onclick="openInfo('estresSenales')">
+          <button class="mini interactive reveal d2" type="button" onclick="openInfo('estresSenales')">
             <div class="tap-icon">i</div>
             <div class="icon">⚡</div>
             <div><b>Señales</b><span>Cansancio, irritabilidad, preocupación o dificultad para concentrarse.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d3" onclick="openInfo('estresCuidar')">
+          <button class="mini interactive reveal d3" type="button" onclick="openInfo('estresCuidar')">
             <div class="tap-icon">i</div>
             <div class="icon">🌱</div>
             <div><b>¿Por qué cuidarlo?</b><span>Manejarlo ayuda a proteger el bienestar y evitar que se acumule.</span></div>
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -2772,23 +2785,23 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         <div class="interactive-hint">👆 Toca cada idea</div>
 
         <div class="stack">
-          <div class="mini interactive reveal d1" onclick="openInfo('generoHombres')">
+          <button class="mini interactive reveal d1" type="button" onclick="openInfo('generoHombres')">
             <div class="tap-icon">i</div>
             <div class="icon">🧱</div>
             <div><b>“Debes ser fuerte”</b><span>A algunos hombres se les puede presionar para ocultar miedo, tristeza o estrés.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d2" onclick="openInfo('generoMujeres')">
+          <button class="mini interactive reveal d2" type="button" onclick="openInfo('generoMujeres')">
             <div class="tap-icon">i</div>
             <div class="icon">🎯</div>
             <div><b>“Debes cumplir con todo”</b><span>Algunas mujeres pueden recibir más presión sobre apariencia, comportamiento o cuidado de otros.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d3" onclick="openInfo('generoIdea')">
+          <button class="mini interactive reveal d3" type="button" onclick="openInfo('generoIdea')">
             <div class="tap-icon">i</div>
             <div class="icon">💜</div>
             <div><b>Una idea más sana</b><span>Ningún género debe definir quién puede expresar emociones o pedir ayuda.</span></div>
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -2806,7 +2819,7 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         </div>
 
         <div class="swipe-stage" id="mythStage">
-          <div class="myth-swipe-card" id="mythCard" role="group" aria-live="polite">
+          <div class="myth-swipe-card" id="mythCard" role="group" tabindex="0" aria-live="polite" aria-label="Tarjeta de mito o realidad. Usa las flechas izquierda o derecha para responder.">
             <div class="swipe-stamp stamp-myth" id="mythStamp">MITO</div>
             <div class="swipe-stamp stamp-reality" id="mythRealityStamp">REALIDAD</div>
             <div class="swipe-card-icon" id="mythIcon">🧱</div>
@@ -2830,23 +2843,23 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         <div class="interactive-hint">👆 Toca una señal para ampliar</div>
 
         <div class="stack">
-          <div class="mini interactive reveal d1" onclick="openInfo('concentracion')">
+          <button class="mini interactive reveal d1" type="button" onclick="openInfo('concentracion')">
             <div class="tap-icon">i</div>
             <div class="icon">📚</div>
             <div><b>Concentración</b><span>Puede costar más estudiar o mantener la atención.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d2" onclick="openInfo('sueno')">
+          <button class="mini interactive reveal d2" type="button" onclick="openInfo('sueno')">
             <div class="tap-icon">i</div>
             <div class="icon">🌙</div>
             <div><b>Sueño</b><span>Las preocupaciones pueden hacer más difícil descansar.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d3" onclick="openInfo('animo')">
+          <button class="mini interactive reveal d3" type="button" onclick="openInfo('animo')">
             <div class="tap-icon">i</div>
             <div class="icon">💭</div>
             <div><b>Estado de ánimo</b><span>Puede aparecer irritabilidad, cansancio o preocupación.</span></div>
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -2859,30 +2872,30 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         <div class="interactive-hint">👆 Todas las tarjetas son interactivas</div>
 
         <div class="tip-grid">
-          <div class="tip interactive reveal d1" onclick="openInfo('reconocer')">
+          <button class="tip interactive reveal d1" type="button" onclick="openInfo('reconocer')">
             <div class="tap-icon">i</div>
             <div class="emoji">🧠</div><b>Reconoce lo que sientes</b>
-          </div>
+          </button>
 
-          <div class="tip interactive reveal d1" onclick="openInfo('hablar')">
+          <button class="tip interactive reveal d1" type="button" onclick="openInfo('hablar')">
             <div class="tap-icon">i</div>
             <div class="emoji">💬</div><b>Habla con alguien de confianza</b>
-          </div>
+          </button>
 
-          <div class="tip interactive reveal d2" onclick="openInfo('descansar')">
+          <button class="tip interactive reveal d2" type="button" onclick="openInfo('descansar')">
             <div class="tap-icon">i</div>
             <div class="emoji">🌙</div><b>Descansa lo suficiente</b>
-          </div>
+          </button>
 
-          <div class="tip interactive reveal d2" onclick="openInfo('moverte')">
+          <button class="tip interactive reveal d2" type="button" onclick="openInfo('moverte')">
             <div class="tap-icon">i</div>
             <div class="emoji">🏃</div><b>Muévete o haz ejercicio</b>
-          </div>
+          </button>
 
-          <div class="tip wide interactive reveal d3" onclick="openInfo('disfrutar')">
+          <button class="tip wide interactive reveal d3" type="button" onclick="openInfo('disfrutar')">
             <div class="tap-icon">i</div>
             <div class="emoji">🎧</div><b>Haz una actividad que disfrutes</b>
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -2948,12 +2961,13 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         </div>
 
         <div class="stereotype-options" role="group" aria-label="Elegir estereotipo">
-          <button class="stereotype-option active" onclick="chooseStereotype('llorar',this)">No debes llorar</button>
-          <button class="stereotype-option" onclick="chooseStereotype('ayuda',this)">Pedir ayuda es debilidad</button>
-          <button class="stereotype-option" onclick="chooseStereotype('perfecta',this)">Debes verte perfecta</button>
-          <button class="stereotype-option" onclick="chooseStereotype('todo',this)">Puedes con todo</button>
+          <button class="stereotype-option active" type="button" data-key="llorar" onclick="chooseStereotype('llorar',this)">No debes llorar</button>
+          <button class="stereotype-option" type="button" data-key="ayuda" onclick="chooseStereotype('ayuda',this)">Pedir ayuda es debilidad</button>
+          <button class="stereotype-option" type="button" data-key="perfecta" onclick="chooseStereotype('perfecta',this)">Debes verte perfecta</button>
+          <button class="stereotype-option" type="button" data-key="todo" onclick="chooseStereotype('todo',this)">Puedes con todo</button>
         </div>
         <p class="fracture-count" id="fractureCount">0 / 4 toques</p>
+        <button class="quiet-action fracture-restart" id="fractureRestart" type="button" onclick="tryAnotherStereotype()" hidden>↻ Romper otro estereotipo</button>
       </div>
     </section>
 
@@ -3024,23 +3038,23 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
         <div class="interactive-hint">👆 Toca cada objetivo</div>
 
         <div class="stack">
-          <div class="mini interactive reveal d1" onclick="openInfo('concientizar')">
+          <button class="mini interactive reveal d1" type="button" onclick="openInfo('concientizar')">
             <div class="tap-icon">i</div>
             <div class="icon">📢</div>
             <div><b>Reconocer el estrés</b><span>Identificar sus señales antes de sentirse completamente saturado.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d2" onclick="openInfo('romperEstereotipos')">
+          <button class="mini interactive reveal d2" type="button" onclick="openInfo('romperEstereotipos')">
             <div class="tap-icon">i</div>
             <div class="icon">🔓</div>
             <div><b>Romper estereotipos</b><span>Recordar que expresar emociones no pertenece a un género.</span></div>
-          </div>
+          </button>
 
-          <div class="mini interactive reveal d3" onclick="openInfo('normalizar')">
+          <button class="mini interactive reveal d3" type="button" onclick="openInfo('normalizar')">
             <div class="tap-icon">i</div>
             <div class="icon">🤝</div>
             <div><b>Normalizar pedir apoyo</b><span>Buscar ayuda puede ser una forma responsable de manejar el estrés.</span></div>
-          </div>
+          </button>
         </div>
       </div>
     </section>
@@ -3073,8 +3087,8 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
 
   </main>
 
-  <div class="tap-zone left" onclick="prevSlide()" aria-label="Anterior"></div>
-  <div class="tap-zone right" onclick="nextSlide()" aria-label="Siguiente"></div>
+  <div class="tap-zone left" onclick="prevSlide()" aria-hidden="true"></div>
+  <div class="tap-zone right" onclick="nextSlide()" aria-hidden="true"></div>
 
   <nav class="nav">
     <button id="prevButton" onclick="prevSlide()" aria-label="Anterior">←</button>
@@ -3409,12 +3423,25 @@ function chooseStereotype(key,button){
   resetGlass();
 }
 
+function tryAnotherStereotype(){
+  const keys = ['llorar','ayuda','perfecta','todo'];
+  const currentIndex = keys.indexOf(selectedStereotype);
+  const nextKey = keys[(currentIndex + 1) % keys.length];
+  const nextButton = document.querySelector(`.stereotype-option[data-key="${nextKey}"]`);
+  chooseStereotype(nextKey,nextButton);
+}
+
 function resetGlass(){
   fractureHits = 0;
   glassBroken = false;
   const wrap = document.getElementById('glassWrap');
   const card = document.getElementById('glassCard');
   if(!wrap || !card) return;
+  const shards = document.getElementById('glassShards');
+  if(shards?._cleanupTimer){
+    clearTimeout(shards._cleanupTimer);
+    shards._cleanupTimer = null;
+  }
   wrap.classList.remove('broken');
   card.classList.remove('broken');
   card.classList.remove('impact');
@@ -3422,34 +3449,32 @@ function resetGlass(){
   card.style.removeProperty('--impact-x');
   card.style.removeProperty('--impact-y');
   document.getElementById('crackSvg').innerHTML = '';
-  document.getElementById('glassShards').innerHTML = '';
+  shards.innerHTML = '';
   document.getElementById('fractureCount').textContent = '0 / 4 toques';
+  const restart = document.getElementById('fractureRestart');
+  if(restart) restart.hidden = true;
 }
 
-function addCrack(x,y){
+function addCrack(x,y,stage=1){
   const svg = document.getElementById('crackSvg');
   const ns = 'http://www.w3.org/2000/svg';
-  const base = Math.random()*Math.PI*2;
 
-  const impact = document.createElementNS(ns,'circle');
-  impact.setAttribute('class','crack-impact');
-  impact.setAttribute('cx',x); impact.setAttribute('cy',y); impact.setAttribute('r','3');
-  svg.appendChild(impact);
+  if(stage===1){
+    const impact = document.createElementNS(ns,'circle');
+    impact.setAttribute('class','crack-impact');
+    impact.setAttribute('cx',x); impact.setAttribute('cy',y); impact.setAttribute('r','3');
+    svg.appendChild(impact);
 
-  const core = document.createElementNS(ns,'circle');
-  core.setAttribute('class','crack-impact-core');
-  core.setAttribute('cx',x); core.setAttribute('cy',y); core.setAttribute('r','1.3');
-  svg.appendChild(core);
-
-  const star = document.createElementNS(ns,'path');
-  star.setAttribute('class','crack-impact-star');
-  star.setAttribute('d',[
-    `M ${(x-2.7).toFixed(2)} ${(y+.2).toFixed(2)} L ${(x+.5).toFixed(2)} ${(y-.5).toFixed(2)}`,
-    `M ${(x+.1).toFixed(2)} ${(y-2.6).toFixed(2)} L ${(x+.6).toFixed(2)} ${(y+.4).toFixed(2)}`,
-    `M ${(x+2.35).toFixed(2)} ${(y+.5).toFixed(2)} L ${(x+.4).toFixed(2)} ${(y+.7).toFixed(2)}`,
-    `M ${(x-.3).toFixed(2)} ${(y+2.45).toFixed(2)} L ${(x-.6).toFixed(2)} ${(y+.5).toFixed(2)}`
-  ].join(' '));
-  svg.appendChild(star);
+    const star = document.createElementNS(ns,'path');
+    star.setAttribute('class','crack-impact-star');
+    star.setAttribute('d',[
+      `M ${(x-2.7).toFixed(2)} ${(y+.2).toFixed(2)} L ${(x+.5).toFixed(2)} ${(y-.5).toFixed(2)}`,
+      `M ${(x+.1).toFixed(2)} ${(y-2.6).toFixed(2)} L ${(x+.6).toFixed(2)} ${(y+.4).toFixed(2)}`,
+      `M ${(x+2.35).toFixed(2)} ${(y+.5).toFixed(2)} L ${(x+.4).toFixed(2)} ${(y+.7).toFixed(2)}`,
+      `M ${(x-.3).toFixed(2)} ${(y+2.45).toFixed(2)} L ${(x-.6).toFixed(2)} ${(y+.5).toFixed(2)}`
+    ].join(' '));
+    svg.appendChild(star);
+  }
 
   const makePath = (className,d,delay)=>{
     const path = document.createElementNS(ns,'path');
@@ -3461,7 +3486,7 @@ function addCrack(x,y){
   };
 
   const clamp = value=>Math.max(4,Math.min(96,value));
-  const crackPath = (x1,y1,angle,length,segments=3,turn=.22)=>{
+  const crackPath = (x1,y1,angle,length,segments=3,turn=.22,phase=0)=>{
     let d = `M ${x1.toFixed(2)} ${y1.toFixed(2)}`;
     let px = x1;
     let py = y1;
@@ -3469,49 +3494,50 @@ function addCrack(x,y){
     const points = [{x:x1,y:y1}];
     const step = length/segments;
     for(let segment=1;segment<=segments;segment++){
-      heading += (Math.random()-.5)*turn;
-      px = clamp(px + Math.cos(heading)*step*(.88+Math.random()*.18));
-      py = clamp(py + Math.sin(heading)*step*(.88+Math.random()*.18));
+      heading += Math.sin(segment*1.85+phase)*turn;
+      const stepScale = .93 + Math.sin(segment*1.42+phase)*.055;
+      px = clamp(px + Math.cos(heading)*step*stepScale);
+      py = clamp(py + Math.sin(heading)*step*stepScale);
       d += ` L ${px.toFixed(2)} ${py.toFixed(2)}`;
       points.push({x:px,y:py});
     }
     return {d, x:px, y:py, points};
   };
 
-  // Un impacto real concentra la fractura: pocas grietas principales,
-  // irregulares, y ramificaciones cortas que nacen exactamente de ellas.
-  const mainCount = 6;
-  for(let i=0;i<mainCount;i++){
-    const angle = base + i*(Math.PI*2/mainCount) + (Math.random()-.5)*.18;
-    const length = 32 + Math.random()*20;
-    const main = crackPath(x,y,angle,length,5,.34);
+  // El mismo molde siempre: cada toque abre dos brazos nuevos desde el
+  // centro. Así la fractura crece por capas, sin perseguir el cursor.
+  const arms = [
+    {angle:-1.66,length:24,turn:.25,branch:1.05,branchLength:9},
+    {angle:-.92,length:27,turn:-.22,branch:-1.12,branchLength:8},
+    {angle:-.28,length:22,turn:.24,branch:1.16,branchLength:8},
+    {angle:.42,length:26,turn:-.24,branch:-1.02,branchLength:9},
+    {angle:1.07,length:23,turn:.20,branch:1.08,branchLength:8},
+    {angle:1.76,length:25,turn:-.26,branch:-1.14,branchLength:9},
+    {angle:2.42,length:22,turn:.22,branch:1.12,branchLength:8},
+    {angle:3.02,length:25,turn:-.20,branch:-1.06,branchLength:8}
+  ];
+  const start = Math.min(arms.length,(stage-1)*2);
+  const end = Math.min(arms.length,stage*2);
+  for(let i=start;i<end;i++){
+    const arm = arms[i];
+    const main = crackPath(x,y,arm.angle,arm.length,5,arm.turn,i*.7);
     const delay = i*34;
     makePath('crack-highlight',main.d,delay);
     makePath('crack-shadow',main.d,delay+18);
 
     const firstAnchor = main.points[2];
-    const firstBranch = crackPath(firstAnchor.x,firstAnchor.y,angle+(i%2 ? -1 : 1)*(.82+Math.random()*.25),10+Math.random()*8,3,.42);
+    const firstBranch = crackPath(firstAnchor.x,firstAnchor.y,arm.angle+arm.branch,arm.branchLength,2,arm.turn*.75,i+1.4);
     makePath('crack-highlight crack-fine',firstBranch.d,delay+44);
     makePath('crack-shadow crack-fine',firstBranch.d,delay+58);
 
-    if(i%2===0){
-      const secondAnchor = main.points[4];
-      const secondBranch = crackPath(secondAnchor.x,secondAnchor.y,angle-(i%3 ? 1.02 : 1.24),8+Math.random()*7,3,.46);
+    if(stage>=3 && (i===4 || i===6)){
+      const secondAnchor = main.points[3];
+      const secondBranch = crackPath(secondAnchor.x,secondAnchor.y,arm.angle-arm.branch*.8,6,2,arm.turn*.7,i+2.1);
       makePath('crack-highlight crack-fine',secondBranch.d,delay+70);
       makePath('crack-shadow crack-fine',secondBranch.d,delay+84);
     }
   }
 
-  // Un halo roto, no un círculo perfecto: da la sensación de presión
-  // acumulada alrededor del punto de golpe sin convertirlo en un adorno.
-  const haloPoints = [];
-  for(let i=0;i<9;i++){
-    const angle = base + i*(Math.PI*2/9);
-    const radius = 4.3 + Math.random()*1.8;
-    haloPoints.push({x:x+Math.cos(angle)*radius,y:y+Math.sin(angle)*radius});
-  }
-  const haloD = `M ${haloPoints.map(point=>`${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(' L ')} Z`;
-  makePath('crack-halo',haloD,95);
 }
 
 function breakGlass(){
@@ -3548,16 +3574,24 @@ function breakGlass(){
     shard.style.setProperty('--delay',`${Math.random()*.12}s`);
     shards.appendChild(shard);
   }
+  // Las partículas son temporales: se retiran cuando ya terminó la caída
+  // para que cada nueva fractura empiece con un DOM limpio.
+  clearTimeout(shards._cleanupTimer);
+  shards._cleanupTimer = setTimeout(()=>{
+    if(glassBroken) shards.innerHTML = '';
+    shards._cleanupTimer = null;
+  },1900);
+  const restart = document.getElementById('fractureRestart');
+  if(restart) restart.hidden = false;
   document.getElementById('fractureCount').textContent = '✦ Idea rota';
   buzz(38);
 }
 
-function hitGlass(e){
+function hitGlass(){
   if(glassBroken) return;
   const card = document.getElementById('glassCard');
-  const rect = card.getBoundingClientRect();
-  const x = ((e.clientX || rect.left+rect.width/2)-rect.left)/rect.width*100;
-  const y = ((e.clientY || rect.top+rect.height/2)-rect.top)/rect.height*100;
+  const x = 50;
+  const y = 50;
   card.style.setProperty('--impact-x',`${x}%`);
   card.style.setProperty('--impact-y',`${y}%`);
   card.classList.remove('impact');
@@ -3565,7 +3599,7 @@ function hitGlass(e){
   card.classList.add('impact');
   clearTimeout(card._impactTimer);
   card._impactTimer = setTimeout(()=>card.classList.remove('impact'),560);
-  addCrack(x,y);
+  addCrack(x,y,fractureHits+1);
   fractureHits++;
   document.getElementById('fractureCount').textContent = `${fractureHits} / 4 toques`;
   buzz(7);
@@ -3819,7 +3853,10 @@ function updateUI(){
 }
 
 function paintCurrentSlide(index, shouldBuzz=false){
-  current = Math.max(0, Math.min(slides.length-1, index));
+  const target = Math.max(0, Math.min(slides.length-1, index));
+  const targetIsPause = Boolean(slides[target]?.querySelector('#breathCircle'));
+  if(breathing && current !== target && !targetIsPause) stopBreathing();
+  current = target;
 
   slides.forEach((slide,i)=>{
     slide.classList.remove('active','before');
@@ -4060,15 +4097,31 @@ document.addEventListener('keydown', e=>{
   if(e.key === 'ArrowLeft') prevSlide();
 });
 
-function toggleBreathing(){
-  breathing = !breathing;
+function stopBreathing(){
+  breathing = false;
+  clearInterval(breathTimer);
+  breathTimer = null;
+  const circle = document.getElementById('breathCircle');
+  const label = document.getElementById('breathLabel');
+  const button = document.getElementById('pauseAction') || document.getElementById('breathButton');
+  circle?.classList.remove('run');
+  if(label) label.textContent = 'Toca para comenzar';
+  if(button) button.textContent = '▶ Empezar respiración';
+  if(button) button.classList.remove('is-running');
+}
 
+function toggleBreathing(){
+  if(breathing){
+    stopBreathing();
+    return;
+  }
+
+  breathing = true;
   const circle = document.getElementById('breathCircle');
   const label = document.getElementById('breathLabel');
   const button = document.getElementById('pauseAction') || document.getElementById('breathButton');
 
   clearInterval(breathTimer);
-
   if(breathing){
     circle.classList.add('run');
     button.textContent = '■ Detener respiración';
@@ -4082,10 +4135,6 @@ function toggleBreathing(){
       label.textContent = steps[i];
       if(navigator.vibrate) navigator.vibrate(8);
     },2000);
-  }else{
-    circle.classList.remove('run');
-    label.textContent = 'Toca para comenzar';
-    button.textContent = '▶ Iniciar respiración';
   }
 }
 
@@ -4095,6 +4144,13 @@ if(mythCardElement){
   mythCardElement.addEventListener('pointermove',moveMythDrag);
   mythCardElement.addEventListener('pointerup',finishMythDrag);
   mythCardElement.addEventListener('pointercancel',finishMythDrag);
+  mythCardElement.addEventListener('keydown',event=>{
+    if(event.key === 'ArrowLeft' || event.key === 'ArrowRight'){
+      event.preventDefault();
+      event.stopPropagation();
+      answerMyth(event.key === 'ArrowLeft' ? 'myth' : 'reality');
+    }
+  });
   renderMythCard();
 }
 
@@ -4142,6 +4198,7 @@ Object.assign(window, {
   startPause,
   anotherPause,
   chooseStereotype,
+  tryAnotherStereotype,
   spinCare
 });
 </script>
