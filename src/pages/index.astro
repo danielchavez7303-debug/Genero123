@@ -1917,15 +1917,18 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .glass-word{position:relative;z-index:1;font-size:clamp(19px,3vw,31px);font-weight:1000;line-height:1.02}
 .glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
 .crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible;transform-origin:center;transition:opacity .28s ease .08s,transform .46s cubic-bezier(.2,.8,.2,1) .08s,filter .28s ease .08s}
-:global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawCrack .58s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
-:global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.84);stroke-width:3.4;opacity:.72;filter:drop-shadow(0 1px 1px rgba(255,255,255,.72))}
-:global(.crack-svg .crack-shadow){stroke:rgba(15,35,92,.88);stroke-width:1.45;filter:drop-shadow(0 1px 1px rgba(14,24,70,.38))}
-:global(.crack-svg .crack-fine.crack-highlight){stroke-width:2.5;opacity:.58}
-:global(.crack-svg .crack-fine.crack-shadow){stroke-width:1.05;opacity:.72}
-:global(.crack-svg .crack-impact){fill:none;stroke:rgba(18,36,92,.65);stroke-width:1.25;transform-box:fill-box;transform-origin:center;animation:impactPulse .5s ease-out var(--crack-delay,0ms) both}
-:global(.crack-svg .crack-impact-core){fill:rgba(23,36,92,.9);stroke:rgba(255,255,255,.95);stroke-width:.9;transform-box:fill-box;transform-origin:center;animation:impactCore .32s ease-out var(--crack-delay,0ms) both}
+:global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawCrack .48s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
+/* Dos capas muy finas: sombra azul debajo y brillo desplazado encima. */
+:global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.94);stroke-width:2.35;opacity:.72;filter:drop-shadow(0 1px 1px rgba(255,255,255,.64))}
+:global(.crack-svg .crack-shadow){stroke:rgba(17,31,83,.96);stroke-width:.95;filter:drop-shadow(0 1px 1px rgba(14,24,70,.42))}
+:global(.crack-svg .crack-fine.crack-highlight){stroke-width:1.65;opacity:.62}
+:global(.crack-svg .crack-fine.crack-shadow){stroke-width:.66;opacity:.82}
+:global(.crack-svg .crack-halo){stroke:rgba(255,255,255,.62);stroke-width:1.25;opacity:.48;stroke-dasharray:1.2 2.2}
+:global(.crack-svg .crack-impact){fill:none;stroke:rgba(18,36,92,.56);stroke-width:.75;stroke-dasharray:1.4 1.6;transform-box:fill-box;transform-origin:center;animation:impactPulse .72s ease-out var(--crack-delay,0ms) both}
+:global(.crack-svg .crack-impact-core){fill:rgba(23,36,92,.92);stroke:rgba(255,255,255,.98);stroke-width:.8;transform-box:fill-box;transform-origin:center;animation:impactCore .42s ease-out var(--crack-delay,0ms) both}
+:global(.crack-svg .crack-impact-star){fill:none;stroke:rgba(16,30,79,.84);stroke-width:.7;stroke-linecap:round;opacity:.9;animation:impactCore .36s ease-out var(--crack-delay,0ms) both}
 @keyframes drawCrack{to{stroke-dashoffset:0}}
-@keyframes impactPulse{0%{opacity:0;transform:scale(.35)}35%{opacity:.9}100%{opacity:0;transform:scale(4.5)}}
+@keyframes impactPulse{0%{opacity:0;transform:scale(.35)}22%{opacity:.72}100%{opacity:.18;transform:scale(2.8)}}
 @keyframes impactCore{0%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1.15)}100%{opacity:.35;transform:scale(1)}}
 @keyframes glassTap{0%,100%{transform:scale(1)}35%{transform:scale(.988)}70%{transform:scale(1.006)}}
 @keyframes impactFlash{0%{opacity:0;transform:scale(.72)}28%{opacity:1}100%{opacity:0;transform:scale(1.18)}}
@@ -3438,6 +3441,16 @@ function addCrack(x,y){
   core.setAttribute('cx',x); core.setAttribute('cy',y); core.setAttribute('r','1.3');
   svg.appendChild(core);
 
+  const star = document.createElementNS(ns,'path');
+  star.setAttribute('class','crack-impact-star');
+  star.setAttribute('d',[
+    `M ${(x-2.7).toFixed(2)} ${(y+.2).toFixed(2)} L ${(x+.5).toFixed(2)} ${(y-.5).toFixed(2)}`,
+    `M ${(x+.1).toFixed(2)} ${(y-2.6).toFixed(2)} L ${(x+.6).toFixed(2)} ${(y+.4).toFixed(2)}`,
+    `M ${(x+2.35).toFixed(2)} ${(y+.5).toFixed(2)} L ${(x+.4).toFixed(2)} ${(y+.7).toFixed(2)}`,
+    `M ${(x-.3).toFixed(2)} ${(y+2.45).toFixed(2)} L ${(x-.6).toFixed(2)} ${(y+.5).toFixed(2)}`
+  ].join(' '));
+  svg.appendChild(star);
+
   const makePath = (className,d,delay)=>{
     const path = document.createElementNS(ns,'path');
     path.setAttribute('class',className);
@@ -3447,49 +3460,58 @@ function addCrack(x,y){
     svg.appendChild(path);
   };
 
-  const clamp = value=>Math.max(3,Math.min(97,value));
-  const crackPath = (x1,y1,angle,length,segments=3)=>{
+  const clamp = value=>Math.max(4,Math.min(96,value));
+  const crackPath = (x1,y1,angle,length,segments=3,turn=.22)=>{
     let d = `M ${x1.toFixed(2)} ${y1.toFixed(2)}`;
     let px = x1;
     let py = y1;
+    let heading = angle;
     const points = [{x:x1,y:y1}];
+    const step = length/segments;
     for(let segment=1;segment<=segments;segment++){
-      const progress = segment/segments;
-      const wobble = (Math.random()-.5)*(segment===segments ? 2.2 : 3.5);
-      px = clamp(x1 + Math.cos(angle)*length*progress + Math.cos(angle+Math.PI/2)*wobble);
-      py = clamp(y1 + Math.sin(angle)*length*progress + Math.sin(angle+Math.PI/2)*wobble);
+      heading += (Math.random()-.5)*turn;
+      px = clamp(px + Math.cos(heading)*step*(.88+Math.random()*.18));
+      py = clamp(py + Math.sin(heading)*step*(.88+Math.random()*.18));
       d += ` L ${px.toFixed(2)} ${py.toFixed(2)}`;
       points.push({x:px,y:py});
     }
     return {d, x:px, y:py, points};
   };
 
-  // Una red de fractura continua: siete grietas principales y ramificaciones
-  // nacidas de sus propios puntos, con trazos finos de distinto peso.
-  for(let i=0;i<7;i++){
-    const angle = base + i*(Math.PI*2/7) + (Math.random()-.5)*.16;
-    const length = 31 + Math.random()*22;
-    const main = crackPath(x,y,angle,length,4);
+  // Un impacto real concentra la fractura: pocas grietas principales,
+  // irregulares, y ramificaciones cortas que nacen exactamente de ellas.
+  const mainCount = 6;
+  for(let i=0;i<mainCount;i++){
+    const angle = base + i*(Math.PI*2/mainCount) + (Math.random()-.5)*.18;
+    const length = 25 + Math.random()*17;
+    const main = crackPath(x,y,angle,length,4,.28);
     const delay = i*34;
     makePath('crack-highlight',main.d,delay);
     makePath('crack-shadow',main.d,delay+18);
 
-    if(i%2===0){
-      const anchor = main.points[2];
-      const bx = anchor.x;
-      const by = anchor.y;
-      const branch = crackPath(bx,by,angle+(Math.random()>.5?1:-1)*(.72+Math.random()*.25),13+Math.random()*9,3);
-      makePath('crack-highlight crack-fine',branch.d,delay+50);
-      makePath('crack-shadow crack-fine',branch.d,delay+68);
-    }
+    const firstAnchor = main.points[1 + (i%2)];
+    const firstBranch = crackPath(firstAnchor.x,firstAnchor.y,angle+(i%2 ? -1 : 1)*(.78+Math.random()*.22),7+Math.random()*6,2,.34);
+    makePath('crack-highlight crack-fine',firstBranch.d,delay+44);
+    makePath('crack-shadow crack-fine',firstBranch.d,delay+58);
 
-    if(i===1 || i===5){
-      const anchor = main.points[3];
-      const branch = crackPath(anchor.x,anchor.y,angle+(Math.random()>.5?1:-1)*(1.02+Math.random()*.22),8+Math.random()*7,2);
-      makePath('crack-highlight crack-fine',branch.d,delay+82);
-      makePath('crack-shadow crack-fine',branch.d,delay+100);
+    if(i%2===0){
+      const secondAnchor = main.points[3];
+      const secondBranch = crackPath(secondAnchor.x,secondAnchor.y,angle-(i%3 ? .95 : 1.15),5+Math.random()*5,2,.4);
+      makePath('crack-highlight crack-fine',secondBranch.d,delay+70);
+      makePath('crack-shadow crack-fine',secondBranch.d,delay+84);
     }
   }
+
+  // Un halo roto, no un círculo perfecto: da la sensación de presión
+  // acumulada alrededor del punto de golpe sin convertirlo en un adorno.
+  const haloPoints = [];
+  for(let i=0;i<9;i++){
+    const angle = base + i*(Math.PI*2/9);
+    const radius = 4.3 + Math.random()*1.8;
+    haloPoints.push({x:x+Math.cos(angle)*radius,y:y+Math.sin(angle)*radius});
+  }
+  const haloD = `M ${haloPoints.map(point=>`${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(' L ')} Z`;
+  makePath('crack-halo',haloD,95);
 }
 
 function breakGlass(){
