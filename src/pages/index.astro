@@ -1877,8 +1877,32 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
   color:var(--navy);
   cursor:crosshair;
   transition:opacity .35s ease,transform .55s cubic-bezier(.2,.8,.2,1),filter .4s ease;
+  will-change:transform,opacity,filter;
 }
-.glass-card.broken{opacity:0;transform:scale(1.13) rotate(3deg);filter:blur(2px);pointer-events:none}
+.glass-card::before,
+.glass-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:0;
+}
+.glass-card::before{
+  border:1px solid rgba(255,255,255,.66);
+  box-shadow:inset 18px 18px 38px rgba(255,255,255,.24),inset -18px -18px 40px rgba(107,157,208,.10);
+}
+.glass-card::after{
+  background:radial-gradient(circle at var(--impact-x,50%) var(--impact-y,50%),rgba(255,255,255,.92) 0 1.5%,rgba(255,255,255,.36) 2.5%,rgba(255,255,255,.08) 8%,transparent 22%);
+  opacity:0;
+}
+.glass-card.impact{
+  animation:glassTap .22s ease both;
+}
+.glass-card.impact::after{
+  animation:impactFlash .5s ease-out both;
+}
+.glass-card.broken{opacity:0;transform:scale(1.13) rotate(3deg);filter:blur(2px);pointer-events:none;animation:glassBreak .52s cubic-bezier(.2,.76,.24,1) both}
 .glass-shine{
   position:absolute;
   top:-40%;
@@ -1901,10 +1925,13 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 @keyframes drawCrack{to{stroke-dashoffset:0}}
 @keyframes impactPulse{0%{opacity:0;transform:scale(.35)}35%{opacity:.9}100%{opacity:0;transform:scale(4.5)}}
 @keyframes impactCore{0%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1.15)}100%{opacity:.35;transform:scale(1)}}
+@keyframes glassTap{0%,100%{transform:scale(1)}35%{transform:scale(.988)}70%{transform:scale(1.006)}}
+@keyframes impactFlash{0%{opacity:0;transform:scale(.72)}28%{opacity:1}100%{opacity:0;transform:scale(1.18)}}
+@keyframes glassBreak{0%{opacity:1;transform:scale(1);filter:none}18%{opacity:.96;transform:scale(1.012) rotate(-.5deg)}100%{opacity:0;transform:scale(1.1) rotate(1.5deg);filter:blur(5px)}}
 :global(.glass-wrap.broken .crack-svg){opacity:.28}
-.glass-shards{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:visible}
-.glass-shard{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(189,214,248,.45));border:1px solid rgba(255,255,255,.9);animation:shardFall var(--duration) cubic-bezier(.2,.8,.2,1) var(--delay) forwards}
-@keyframes shardFall{to{opacity:0;transform:translate3d(var(--tx),var(--ty),0) rotate(var(--rot)) scale(.65)}}
+.glass-shards{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:visible}
+.glass-shard{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(176,211,246,.54) 56%,rgba(255,255,255,.18));filter:drop-shadow(0 2px 2px rgba(23,36,92,.18));opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg);animation:shardBurst var(--duration) cubic-bezier(.18,.76,.18,1) var(--delay) forwards}
+@keyframes shardBurst{0%{opacity:0;transform:translate3d(-50%,-50%,0) scale(.35) rotate(0deg)}16%{opacity:.92;transform:translate3d(-50%,-50%,0) scale(1) rotate(calc(var(--rot) * .16))}100%{opacity:0;transform:translate3d(var(--tx),var(--ty),0) scale(.78) rotate(var(--rot))}}
 .stereotype-options{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .stereotype-option{
   padding:9px 12px;
@@ -2910,7 +2937,7 @@ body.responsive-ui .support-source a{color:#6751c8;font-weight:800;text-decorati
               <span class="glass-word" id="glassWord">LOS HOMBRES<br>NO DEBEN LLORAR</span>
               <span class="glass-hint">toca para romper</span>
             </button>
-            <svg class="crack-svg" id="crackSvg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+            <svg class="crack-svg" id="crackSvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
           </div>
           <div class="glass-shards" id="glassShards" aria-hidden="true"></div>
         </div>
@@ -3385,6 +3412,9 @@ function resetGlass(){
   if(!wrap || !card) return;
   wrap.classList.remove('broken');
   card.classList.remove('broken');
+  card.classList.remove('impact');
+  card.style.removeProperty('--impact-x');
+  card.style.removeProperty('--impact-y');
   document.getElementById('crackSvg').innerHTML = '';
   document.getElementById('glassShards').innerHTML = '';
   document.getElementById('fractureCount').textContent = '0 / 4 toques';
@@ -3456,16 +3486,24 @@ function breakGlass(){
   document.getElementById('glassCard').classList.add('broken');
   wrap.classList.add('broken');
   const shards = document.getElementById('glassShards');
-  for(let i=0;i<18;i++){
+  const shardShapes = [
+    'polygon(50% 0,100% 74%,28% 100%,0 38%)',
+    'polygon(14% 0,100% 22%,74% 100%,0 70%)',
+    'polygon(0 18%,68% 0,100% 78%,34% 100%)',
+    'polygon(44% 0,100% 56%,62% 100%,0 72%)'
+  ];
+  for(let i=0;i<26;i++){
     const shard = document.createElement('span');
     shard.className = 'glass-shard';
-    shard.style.setProperty('--x',`${34+Math.random()*32}%`);
-    shard.style.setProperty('--y',`${28+Math.random()*42}%`);
-    shard.style.setProperty('--size',`${5+Math.random()*13}px`);
-    shard.style.setProperty('--tx',`${(Math.random()-.5)*270}px`);
-    shard.style.setProperty('--ty',`${70+Math.random()*180}px`);
-    shard.style.setProperty('--rot',`${(Math.random()-.5)*520}deg`);
-    shard.style.setProperty('--duration',`${.65+Math.random()*.65}s`);
+    shard.style.setProperty('--x',`${45+Math.random()*10}%`);
+    shard.style.setProperty('--y',`${36+Math.random()*28}%`);
+    shard.style.setProperty('--w',`${9+Math.random()*25}px`);
+    shard.style.setProperty('--h',`${11+Math.random()*32}px`);
+    shard.style.clipPath = shardShapes[i%shardShapes.length];
+    shard.style.setProperty('--tx',`${(Math.random()-.5)*340}px`);
+    shard.style.setProperty('--ty',`${100+Math.random()*210}px`);
+    shard.style.setProperty('--rot',`${(Math.random()-.5)*620}deg`);
+    shard.style.setProperty('--duration',`${.7+Math.random()*.72}s`);
     shard.style.setProperty('--delay',`${Math.random()*.12}s`);
     shards.appendChild(shard);
   }
@@ -3479,6 +3517,13 @@ function hitGlass(e){
   const rect = card.getBoundingClientRect();
   const x = ((e.clientX || rect.left+rect.width/2)-rect.left)/rect.width*100;
   const y = ((e.clientY || rect.top+rect.height/2)-rect.top)/rect.height*100;
+  card.style.setProperty('--impact-x',`${x}%`);
+  card.style.setProperty('--impact-y',`${y}%`);
+  card.classList.remove('impact');
+  void card.offsetWidth;
+  card.classList.add('impact');
+  clearTimeout(card._impactTimer);
+  card._impactTimer = setTimeout(()=>card.classList.remove('impact'),560);
   addCrack(x,y);
   fractureHits++;
   document.getElementById('fractureCount').textContent = `${fractureHits} / 4 toques`;
