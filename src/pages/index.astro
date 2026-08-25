@@ -1894,8 +1894,8 @@ body.responsive-ui .modal-sheet{max-height:min(78vh,650px);max-height:min(78dvh,
 .glass-hint{position:absolute;z-index:1;bottom:18px;color:rgba(23,22,79,.48);font-size:11px;font-weight:800}
 .crack-svg{position:absolute;inset:0;z-index:5;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity .45s ease}
 :global(.crack-svg path){fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawCrack .58s cubic-bezier(.22,.7,.2,1) var(--crack-delay,0ms) both}
-:global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.78);stroke-width:4;filter:drop-shadow(0 1px 1px rgba(255,255,255,.72))}
-:global(.crack-svg .crack-shadow){stroke:rgba(18,36,92,.92);stroke-width:1.75;filter:drop-shadow(0 1px 1px rgba(14,24,70,.46))}
+:global(.crack-svg .crack-highlight){stroke:rgba(255,255,255,.78);stroke-width:4.8;filter:drop-shadow(0 1px 1px rgba(255,255,255,.72))}
+:global(.crack-svg .crack-shadow){stroke:rgba(18,36,92,.94);stroke-width:2.05;filter:drop-shadow(0 1px 1px rgba(14,24,70,.46))}
 :global(.crack-svg .crack-impact){fill:none;stroke:rgba(18,36,92,.65);stroke-width:1.25;transform-box:fill-box;transform-origin:center;animation:impactPulse .5s ease-out var(--crack-delay,0ms) both}
 :global(.crack-svg .crack-impact-core){fill:rgba(23,36,92,.9);stroke:rgba(255,255,255,.95);stroke-width:.9;transform-box:fill-box;transform-origin:center;animation:impactCore .32s ease-out var(--crack-delay,0ms) both}
 @keyframes drawCrack{to{stroke-dashoffset:0}}
@@ -3433,17 +3433,17 @@ function addCrack(x,y){
   // como vidrio que se abre desde el golpe, no como una estrella dibujada.
   for(let i=0;i<5;i++){
     const angle = base + i*(Math.PI*2/5) + (Math.random()-.5)*.22;
-    const length = 19 + Math.random()*15;
+    const length = 28 + Math.random()*20;
     const main = crackPath(x,y,angle,length,3);
     const delay = i*34;
     makePath('crack-highlight',main.d,delay);
     makePath('crack-shadow',main.d,delay+18);
 
     if(i===1 || i===3){
-      const branchStart = .48 + Math.random()*.16;
+      const branchStart = .44 + Math.random()*.20;
       const bx = x + Math.cos(angle)*length*branchStart;
       const by = y + Math.sin(angle)*length*branchStart;
-      const branch = crackPath(bx,by,angle+(Math.random()>.5?1:-1)*(.65+Math.random()*.25),8+Math.random()*6,2);
+      const branch = crackPath(bx,by,angle+(Math.random()>.5?1:-1)*(.65+Math.random()*.25),11+Math.random()*8,2);
       makePath('crack-highlight',branch.d,delay+50);
       makePath('crack-shadow',branch.d,delay+68);
     }
